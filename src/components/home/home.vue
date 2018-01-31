@@ -110,6 +110,7 @@ export default {
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 .home
   height 100%
+  width 100%
   display flex
   flex 1
   background #E8EBF0
@@ -129,6 +130,7 @@ export default {
     display flex
     flex-direction column
     overflow hidden
+    width 100%
     .rCont
       flex 1
       overflow auto
