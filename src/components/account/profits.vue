@@ -1,30 +1,17 @@
 <template>
   <div class="rechargeList">
     <div class="wrap">
-      <h3>任务列表</h3>
-      <ul>
+      <h3>利润明细</h3>
+      <ul class="ulTow">
         <li>
-          物流平台:
+          交易类型:
           <el-select v-model="value" placeholder="请选择">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </li>
         <li>
-          支付状态:
-          <el-select v-model="value4" placeholder="请选择">
-            <el-option v-for="item in payState" :key="item.value4" :label="item.label" :value="item.value4">
-            </el-option>
-          </el-select>
-        </li>
-      </ul>
-      <ul class="ulTow">
-        <li>
-          任务编号:
-          <el-input v-model="input1" placeholder="请输入编号"></el-input>
-        </li>
-        <li>
-          提交日期:
+          交易时间:
           <el-date-picker v-model="value3" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format='yyyy-MM-dd' format='yyyy-MM-dd'>
           </el-date-picker>
         </li>
@@ -34,26 +21,17 @@
       </ul>
       <div class="table">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="date" label="提交日期" align="center">
+          <el-table-column prop="date" label="时间" align="center">
           </el-table-column>
-          <el-table-column prop="taskNum" label="任务编号" align="center">
+          <el-table-column prop="type" label="类型" align="center">
           </el-table-column>
-          <el-table-column prop="name" label="用户名" align="center">
+          <el-table-column prop="money" label="金额" align="center">
           </el-table-column>
-          <el-table-column prop="company" label="快递公司" align="center">
+          <el-table-column prop="beforeMoney" label="变动前金额" align="center">
           </el-table-column>
-          <el-table-column prop="orderNum" label="订单数" align="center">
+          <el-table-column prop="lasetMoney" label="变动后金额" align="center">
           </el-table-column>
-          <el-table-column prop="price" label="单价" align="center">
-          </el-table-column>
-          <el-table-column prop="tasktotalPrice" label="任务总价" align="center">
-          </el-table-column>
-          <el-table-column prop="state" label="付款状态" align="center">
-          </el-table-column>
-          <el-table-column label="操作" align="center">
-            <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            </template>
+          <el-table-column prop="market" label="备注" align="center">
           </el-table-column>
         </el-table>
       </div>
@@ -111,50 +89,24 @@ export default {
         label: '北京烤鸭'
       }],
       value: '',
-      payState: [{
-        value4: '选项2',
-        label: '双皮奶'
-      }, {
-        value4: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value4: '选项4',
-        label: '龙须面'
-      }],
-      value4: '',
       tableData: [{
-        name: '5454545454',
         date: '2017-02-01',
-        taskNum: '546546546546',
-        company: '圆通',
-        orderNum: '5',
-        price: '3.00',
-        tasktotalPrice: '15.00',
-        state: '已付款'
+        type: '下单获得利润',
+        money: '1',
+        beforeMoney: '5',
+        lasetMoney: '6',
+        market: '5468546546'
+      }, {
+        date: '2017-02-01',
+        type: '下单获得利润',
+        money: '1',
+        beforeMoney: '5',
+        lasetMoney: '6',
+        market: '5468546546'
       }]
     }
   },
   methods: {
-    handleClick () {
-      this.dialogVisible = true
-    },
-    handleClickCecal () {
-      this.$confirm('你确认取消订单么? 请谨慎操作', '取消订单', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
     },

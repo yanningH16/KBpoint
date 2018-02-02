@@ -39,27 +39,58 @@
       </ul>
       <div class="table">
         <el-table :data="tableData" border style="width: 100%">
-          <el-table-column fixed prop="date" label="日期" width="150">
+          <el-table-column prop="name" fixed label="用户名" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="name" label="姓名" width="120">
+          <el-table-column prop="date" label="提交日期" width="150" align="center">
           </el-table-column>
-          <el-table-column prop="province" label="省份" width="120">
+          <el-table-column prop="stopDate" label="到账日期" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="city" label="市区" width="120">
+          <el-table-column prop="number" label="交易号" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="address" label="地址" width="300">
+          <el-table-column prop="payNum" label="充值金额" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="zip" label="邮编" width="120">
+          <el-table-column prop="payType" label="付款方式" width="120" align="center">
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="100">
+          <el-table-column prop="payStyle" label="付款说明" width="120" align="center">
+          </el-table-column>
+          <el-table-column prop="paybefore" label="充值前金额" width="120" align="center">
+          </el-table-column>
+          <el-table-column prop="state" label="状态" width="120" align="center">
+          </el-table-column>
+          <el-table-column prop="payafter" label="充值后金额" width="120" align="center">
+          </el-table-column>
+          <el-table-column prop="market" label="备注" width="120" align="center">
+          </el-table-column>
+          <el-table-column fixed="right" label="操作" width="150" align="center">
             <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-              <el-button type="text" size="small">编辑</el-button>
+              <el-button @click="handleClick(scope.row)" type="text" size="small">款已到账</el-button>
+              <el-button type="text" size="small" @click="handleClickCecal(scope.row)">取消订单</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
+      <div class="pager">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+        </el-pagination>
+      </div>
     </div>
+    <!-- 当点击款已到账的弹框 -->
+    <el-dialog title="用户充值确认" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+      <p>
+        <span>到账日期</span>
+        <el-date-picker v-model="value1" type="date" placeholder="选择日期">
+        </el-date-picker>
+      </p>
+      <p class="markets">
+        <span>备注</span>
+        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea">
+        </el-input>
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -67,10 +98,13 @@ export default {
   name: 'rechargeList',
   data () {
     return {
+      dialogVisible: false,
       currentPage: 1,
       pageSize: 5,
       input: '',
       input1: '',
+      value1: '',
+      textarea: '',
       value3: '',
       options: [{
         value: '选项1',
@@ -101,39 +135,46 @@ export default {
       }],
       value4: '',
       tableData: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
+        name: '5454545454',
+        date: '2017-02-01',
+        stopDate: '2017-02-01',
+        number: '1212131566',
+        payNum: '3.00',
+        payType: '银行卡转账',
+        payStyle: '哈哈哈',
+        paybefore: '3.00',
+        state: '待审核',
+        payafter: '6.00',
+        market: '呜呜呜'
       }]
     }
   },
   methods: {
     handleClick () {
-
+      this.dialogVisible = true
+    },
+    handleClickCecal () {
+      this.$confirm('你确认取消订单么? 请谨慎操作', '取消订单', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`)
     }
   }
 }
@@ -183,4 +224,9 @@ export default {
     .actTab
       border 1px solid #e5e5e5
       margin-top 20px
+  .markets
+    margin-top 20px
+    span
+      margin-right 28px
+      vertical-align top
 </style>
