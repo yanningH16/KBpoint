@@ -1,39 +1,16 @@
 <template>
   <div class="userTitle">
     <div class="cont">
-      <div>
-        <span class="record" v-if="userInfo.status===2">
-          <i class="iconfont icon-qi"></i>
-          <strong>认证中</strong>
-        </span>
-        <router-link :to="{name:'sucessChange'}">
-          <span class="record" v-if="userInfo.status===1">
-            <i class="iconfont icon-qi1"></i>
-            <strong>已认证</strong>
-          </span>
-        </router-link>
-        <span class="record" v-if="userInfo.status===4">
-          <i class="iconfont icon-qi2"></i>
-          <strong>认证驳回</strong>
-        </span>
-        <span class="record" v-if="userInfo.status===3">
-          <i class="iconfont icon-qi2"></i>
-          <strong>未认证</strong>
-        </span>
-      </div>
       <div class="info" @click="showInfo=!showInfo">
-        <b class="head">
-          Y
-        </b>
-        <a class="el-icon-arrow-down"></a>
+        <img src="../../assets/images/bg.png" alt="">
+        <span>15037183341</span>
+        <a class="el-icon-caret-bottom"></a>
         <transition :name="showInfo ? 'el-fade-in-linear' : 'el-fade-in'">
           <ul class="operate" :class="{ 'fadeIn': showInfo, 'fadeOut': !showInfo }" v-show="showInfo">
             <li @click="showPass=true">
-              <i class="iconfont icon-xiugaimima"></i>
-              <span>修改登录密码</span>
+              <span>修改密码</span>
             </li>
             <li @click="logout">
-              <i class="iconfont icon-quite"></i>
               <span>退出登录</span>
             </li>
           </ul>
@@ -97,8 +74,8 @@ export default {
       })
     },
     fixPass () {
-      this.$ajax.post('/api/user/changePwd', {
-        telephone: this.userInfo.telephone,
+      this.$ajax.post('/api/substation/changePwd', {
+        substationAccountId: this.userInfo.userId,
         oldPwd: md5(this.fixPassObj.oldpass),
         newPwd: md5(this.fixPassObj.newpass1),
         repeatPwd: md5(this.fixPassObj.newpass2)
@@ -127,53 +104,42 @@ export default {
   position relative
   z-index 998
   height 60px
-  font-size 12px
+  font-size 16px
   background #ffffff
   box-shadow 0 2px 0 #E8EBF0
   .cont
     float right
     display flex
-    line-height 100%
-    width 150px
-    height 100%
     text-align right
     >div
       line-height 60px
     .record
       margin-right 24px
       font-size 12px
-      color #525F75
-      line-height 1
-      i, strong
-        vertical-align middle
+      color #666
+      span
+        margin-right 12px
     .info
       cursor pointer
       position relative
-      .head
-        display inline-block
-        width 19px
-        height 19px
-        margin-right 10px
-        border 1px solid #000000
+      margin-right 10px
+      img
+        width 22px
+        height 22px
         border-radius 50%
-        background #000000
-        line-height 20px
-        text-align center
-        color #ffffff
-        font-weight bold
+        vertical-align middle
       .operate
         position fixed
-        top 60px
+        top 59px
         right 0
         z-index 999
-        width 180px
+        width 146px
         background #ffffff
-        text-align left
+        text-align center
         transition all 0.3s
         box-shadow 0 2px 4px rgba(82, 95, 117, 0.18)
         li
           height 50px
-          line-height 50px
           font-size 14px
           color #525F75
           i

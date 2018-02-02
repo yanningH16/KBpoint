@@ -9,7 +9,6 @@ import axios from './assets/js/http'
 import 'babel-polyfill'
 // import 'element-ui/lib/theme-chalk/index.css'
 import './assets/stylus/index.styl'
-
 Vue.config.productionTip = false
 Vue.prototype.$ajax = axios
 // Vue.use(Element)

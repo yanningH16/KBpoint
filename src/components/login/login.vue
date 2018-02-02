@@ -1,13 +1,9 @@
 <template>
   <div class="login" @keyup.13="LogoIn">
     <div class="logo">
-      <img src="../../assets/images/ico.png" alt="logo">
-      <span>抱 一 云 信</span>
+      <span>分站平台</span>
     </div>
     <div class="cont">
-      <div class="text">
-        <h1>数 据 智 能&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;驱 动 未 来</h1>
-      </div>
       <div class="board">
         <h2>登&nbsp;录</h2>
         <div class="inputCont">
@@ -22,8 +18,7 @@
           <button @click="LogoIn">登&nbsp;录</button>
           <h3>
             <span class="hover">
-              <router-link :to="{ name: 'sign', params: { userId: 123 }}">忘记密码 &nbsp;| &nbsp;</router-link>
-              <router-link :to="{ name: 'reg', params: { userId: 123 }}">立即注册</router-link>
+              <router-link :to="{ name: 'sign', params: { userId: 123 }}">忘记密码 </router-link>
             </span>
           </h3>
         </div>
@@ -44,6 +39,18 @@ export default {
       focusPass: false
     }
   },
+  created () {
+    this.$ajax.get('/ipApi', {
+    }).then((data) => {
+      if (data.status === '200') {
+        this.ip = data.data.ip
+      } else {
+        this.$message.error('获取ip失败')
+      }
+    }).catch(() => {
+      this.$message.error('服务器错误！')
+    })
+  },
   methods: {
     LogoIn () {
       if (this.username === '' || this.password === '') {
@@ -59,11 +66,11 @@ export default {
         })
         return false
       } else {
-        this.$ajax.post('/api/user/login', {
-          telephone: this.username,
+        this.$ajax.post('/api/substation/login', {
+          userName: this.username,
           password: md5(this.password)
         }).then(data => {
-          console.log(data)
+          // console.log(data)
           if (data.data.code === '200') {
             this.setUserInfo(data.data.data)
             this.setUserToken(data.headers.accesstoken)
@@ -71,7 +78,7 @@ export default {
               message: '登录成功,页面跳转中...',
               type: 'success',
               onClose: () => {
-                this.$router.push({ name: 'index' })
+                this.$router.push({ name: 'userManger' })
               }
             })
           } else {
@@ -98,7 +105,7 @@ export default {
   min-width 800px
   width 100%
   height 100%
-  background url('../../assets/images/bg.png')
+  background #ccc
   .logo
     color #ffffff
     height 33px

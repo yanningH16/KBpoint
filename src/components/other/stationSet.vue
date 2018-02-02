@@ -70,10 +70,7 @@
     <div class="cover">
       <el-dialog title="修改升级条件" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
         <span>用户累计</span>
-        <el-select v-model="value1" placeholder="请选择">
-          <el-option v-for="item in coinPay" :key="item.value1" :label="item.label" :value="item.value1">
-          </el-option>
-        </el-select>
+        <el-input v-model="value1" placeholder="请输入内容"></el-input>
         <span>元后自动升级到该等级</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -85,10 +82,7 @@
     <div class="cover">
       <el-dialog title="设计价格" :visible.sync="dialogVisible_1" width="40%" :before-close="handleClose">
         <span>价格</span>
-        <el-select v-model="value2" placeholder="请选择">
-          <el-option v-for="item in setPrice" :key="item.value2" :label="item.label" :value="item.value2">
-          </el-option>
-        </el-select>
+        <el-input v-model="value2" placeholder="请输入内容"></el-input>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible_1 = false">取 消</el-button>
           <el-button type="primary" @click="dialogVisible_1 = false">确 定</el-button>
@@ -97,7 +91,8 @@
     </div>
   </div>
 </template>
-<script type="text/ecmascript-6">
+<script type="text/ecmascript-6" >
+import { mapGetters } from 'vuex'
 export default {
   name: 'stationSet',
   data () {
@@ -111,37 +106,11 @@ export default {
       dialogVisible: false,
       dialogVisible_1: false,
       options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: '银行卡转账',
+        label: '银行卡转账'
       }],
       value: '',
-      coinPay: [{
-        value1: '选项1',
-        label: '黄金糕'
-      }, {
-        value1: '选项5',
-        label: '北京烤鸭'
-      }],
       value1: '',
-      setPrice: [{
-        value2: '选项1',
-        label: '黄金糕'
-      }, {
-        value2: '选项5',
-        label: '北京烤鸭'
-      }],
       value2: '',
       tableData: [{
         vip: '注册用户',
@@ -170,6 +139,11 @@ export default {
         price: '3.00'
       }]
     }
+  },
+  computed: {
+    ...mapGetters([
+      'userInfo'
+    ])
   },
   methods: {
     handleClick (tab, event) {
