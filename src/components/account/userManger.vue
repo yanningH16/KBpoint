@@ -49,14 +49,11 @@
           <button class="BtnDisable">查询</button>
         </li>
       </ul>
-      <p style="margin-top:2px;padding-bottom:5px">
-        <button class="centerBtn">重新获取单号</button>
-      </p>
       <div class="table">
         <el-table :data="tableData" border style="width: 100%">
-          <el-table-column prop="name" label="用户名" width="120" align="center">
+          <el-table-column prop="userName" label="用户名" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="phone" label="手机" width="120" align="center">
+          <el-table-column prop="telephone" label="手机" width="120" align="center">
           </el-table-column>
           <el-table-column prop="QQ" label="QQ" width="120" align="center">
           </el-table-column>
@@ -64,21 +61,27 @@
           </el-table-column>
           <el-table-column prop="yu" label="余额" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="cumulative" label="累计充值" width="120" align="center">
+          <el-table-column prop="rechargeSum" label="累计充值" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="level" label="会员等级" width="120" align="center">
+          <el-table-column prop="levelDetail" label="会员等级" width="120" align="center">
           </el-table-column>
           <el-table-column prop="price" label="圆通价" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="state" label="状态" width="120" align="center">
+          <el-table-column prop="statusDetail" label="状态" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="waitingState" label="审核状态" width="120" align="center">
+          <el-table-column prop="checkStatus" label="审核状态" width="120" align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.checkStatus==='0'">未提交</span>
+              <span v-if="scope.row.checkStatus==='1'">未审核</span>
+              <span v-if="scope.row.checkStatus==='2'">审核未通过</span>
+              <span v-if="scope.row.checkStatus==='3'">审核通过</span>
+            </template>
           </el-table-column>
-          <el-table-column prop="date" label="注册时间" width="150" align="center">
+          <el-table-column prop="gmtCreate" label="注册时间" width="160" align="center">
           </el-table-column>
-          <el-table-column prop="referees" label="推荐人" width="150" align="center">
+          <el-table-column prop="invitorName" label="推荐人" width="150" align="center">
           </el-table-column>
-          <el-table-column prop="invitation" label="邀请码" width="150" align="center">
+          <el-table-column prop="invitedCode" label="邀请码" width="150" align="center">
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="250" align="center">
             <template slot-scope="scope">
@@ -100,7 +103,7 @@
         </div>
       </div>
       <div class="pager">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
         </el-pagination>
       </div>
     </div>
@@ -113,7 +116,7 @@
       </el-select>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="sure">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 设置等级价格的弹框 -->
@@ -132,7 +135,7 @@
       </p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible_1 = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible_1 = false">确 定</el-button>
+        <el-button type="primary" @click="sure_1">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 设置推荐人弹框 -->
@@ -203,8 +206,11 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+import { mapGetters } from 'vuex'
+import { pageCommon } from '../../assets/js/mixin'
 export default {
   name: 'userManger',
+  mixins: [pageCommon],
   data () {
     return {
       dialogVisible: false,
@@ -216,7 +222,7 @@ export default {
       dialogVisible_6: false,
       pullClick: false,
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 20,
       input: '',
       input1: '',
       input2: '',
@@ -230,57 +236,70 @@ export default {
       input10: '',
       textarea: '',
       value3: '',
+      sellerAccountId: '',
       options: [{
-        value: '选项1',
-        label: '黄金糕'
+        value: '0',
+        label: '未提交'
       }, {
-        value: '选项2',
-        label: '双皮奶'
+        value: '1',
+        label: '未审核'
       }, {
-        value: '选项3',
-        label: '蚵仔煎'
+        value: '2',
+        label: '审核未通过'
       }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: '3',
+        label: '审核通过'
       }],
       value: '',
       userLevel: [{
-        value4: '选项2',
-        label: '双皮奶'
+        value4: '1',
+        label: '注册用户'
       }, {
-        value4: '选项3',
-        label: '蚵仔煎'
+        value4: '2',
+        label: '高级用户'
       }, {
-        value4: '选项4',
-        label: '龙须面'
+        value4: '3',
+        label: '钻石用户'
+      }, {
+        value4: '4',
+        label: '皇冠用户'
       }],
       value4: '',
       userState: [{
-        value5: '选项3',
-        label: '蚵仔煎'
+        value5: '1',
+        label: '正常'
       }, {
-        value5: '选项4',
-        label: '龙须面'
+        value5: '2',
+        label: '冻结'
       }],
       value5: '',
       value1: '',
       audit: [{
-        value1: '选项3',
-        label: '蚵仔煎'
+        value1: '0',
+        label: '未提交'
       }, {
-        value1: '选项4',
-        label: '龙须面'
+        value1: '1',
+        label: '未审核'
+      }, {
+        value1: '2',
+        label: '审核未通过'
+      }, {
+        value1: '3',
+        label: '审核通过'
       }],
       value2: '',
       level: [{
-        value2: '选项3',
-        label: '蚵仔煎'
+        value2: '1',
+        label: '注册用户'
       }, {
-        value2: '选项4',
-        label: '龙须面'
+        value2: '2',
+        label: '高级用户'
+      }, {
+        value2: '3',
+        label: '钻石用户'
+      }, {
+        value2: '4',
+        label: '皇冠用户'
       }],
       tableData: [{
         name: '5454545454',
@@ -296,21 +315,88 @@ export default {
         date: '2017-02-01',
         referees: '卧槽',
         invitation: 'dfld'
-      }]
+      }],
+      apiUrl: '/api/seller/getPagingSellerListByCondtion'
     }
   },
+  computed: {
+    params () {
+      return {
+        pageNo: this.pageNo,
+        pageSize: this.pageSize,
+        accountStatus: this.value5,
+        checkStatus: this.value,
+        level: this.value4,
+        userName: this.input1,
+        telephone: this.input2,
+        qq: this.input,
+        ip: this.input3,
+        substationId: this.userInfo.substationId
+      }
+    },
+    ...mapGetters([
+      'userInfo'
+    ])
+  },
   methods: {
-    handleClick () {
+    // 获取列表
+    setList (data) {
+      this.tableData = data
+    },
+    // 设置审核状态
+    handleClick (val) {
+      this.sellerAccountId = val.sellerAccountId
       this.dialogVisible = true
     },
-    handleClickCecal () {
+    sure () {
+      this.$ajax.post('/api/seller/setCheckStatus', {
+        sellerAccountId: this.sellerAccountId,
+        checkStatus: this.value1
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            type: 'success',
+            message: '设置成功'
+          })
+          this.dialogVisible = false
+          this.getList()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: data.data.message
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    // 设置用户等级
+    handleClickCecal (val) {
       this.dialogVisible_1 = true
+      this.sellerAccountId = val.sellerAccountId
     },
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+    sure_1 () {
+      this.$ajax.post('/api/seller/setLevelAndPrice', {
+        sellerAccountId: this.sellerAccountId,
+        price: this.input4,
+        level: this.value2
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            type: 'success',
+            message: '设置成功'
+          })
+          this.dialogVisible_1 = false
+          this.getList()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: data.data.message
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     pull () {
       this.pullClick = !this.pullClick
@@ -387,7 +473,7 @@ export default {
       position relative
     .pull
       position absolute
-      top 92px
+      top 100px
       right 0
       width 105px
       height 150px

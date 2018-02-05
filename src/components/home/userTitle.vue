@@ -3,7 +3,7 @@
     <div class="cont">
       <div class="info" @click="showInfo=!showInfo">
         <img src="../../assets/images/bg.png" alt="">
-        <span>15037183341</span>
+        <span>{{this.userInfo.userName}}</span>
         <a class="el-icon-caret-bottom"></a>
         <transition :name="showInfo ? 'el-fade-in-linear' : 'el-fade-in'">
           <ul class="operate" :class="{ 'fadeIn': showInfo, 'fadeOut': !showInfo }" v-show="showInfo">
@@ -75,10 +75,10 @@ export default {
     },
     fixPass () {
       this.$ajax.post('/api/substation/changePwd', {
-        substationAccountId: this.userInfo.userId,
+        substationAccountId: this.userInfo.substationAccountId,
         oldPwd: md5(this.fixPassObj.oldpass),
         newPwd: md5(this.fixPassObj.newpass1),
-        repeatPwd: md5(this.fixPassObj.newpass2)
+        rePwd: md5(this.fixPassObj.newpass2)
       }).then((data) => {
         if (data.data.code === '200') {
           this.$message({

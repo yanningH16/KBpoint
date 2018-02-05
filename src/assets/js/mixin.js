@@ -1,7 +1,7 @@
 export const pageCommon = {
   data () {
     return {
-      pageSizeArray: [5, 10, 15, 20],
+      pageSizeArray: [20, 30, 40, 50],
       pageNo: 1,
       pageSize: 5,
       pageTotal: null,

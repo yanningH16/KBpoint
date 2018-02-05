@@ -5,7 +5,7 @@ import home from './home/home'
 
 const defaultRouter = [{
   path: '/',
-  redirect: 'money/leftMoney'
+  redirect: 'login'
 }]
 
 Vue.use(Router)

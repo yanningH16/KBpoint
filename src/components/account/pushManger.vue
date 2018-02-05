@@ -23,21 +23,28 @@
       </ul>
       <div class="table">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="referees" label="推荐人" align="center">
+          <el-table-column prop="invitorName" label="推荐人" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="抽成类型" align="center">
+          <el-table-column prop="invitorCode" label="邀请码" align="center">
           </el-table-column>
-          <el-table-column prop="onePrice" label="单笔抽成/成本价" align="center">
+          <el-table-column prop="rakeType" label="抽成类型" align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.rakeType==='1'">无</span>
+              <span v-if="scope.row.rakeType==='2'">差价</span>
+              <span v-if="scope.row.rakeType==='3'">固定金额</span>
+            </template>
           </el-table-column>
-          <el-table-column prop="referessNum" label="推荐用户数" align="center">
+          <el-table-column prop="rakeMoney" label="单笔抽成/成本价" align="center">
           </el-table-column>
-          <el-table-column prop="yu" label="账户余额" align="center">
+          <el-table-column prop="inviteSum" label="推荐用户数" align="center">
           </el-table-column>
-          <el-table-column prop="date" label="添加时间" align="center">
+          <el-table-column prop="balance" label="账户余额" align="center">
           </el-table-column>
-          <el-table-column prop="lastDate" label="最后修改时间" align="center">
+          <el-table-column prop="gmtCreate" label="添加时间" align="center">
           </el-table-column>
-          <el-table-column prop="market" label="备注" align="center">
+          <el-table-column prop="gmtModify" label="最后修改时间" align="center">
+          </el-table-column>
+          <el-table-column prop="comment" label="备注" align="center">
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
@@ -49,7 +56,7 @@
         </el-table>
       </div>
       <div class="pager">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
         </el-pagination>
       </div>
     </div>
@@ -81,7 +88,7 @@
       </p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="sure">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 当点击调账的时候触发 -->
@@ -110,9 +117,13 @@
         <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea1">
         </el-input>
       </p>
+      <p style="margin-top:20px;margin-left:70px" v-if="this.value3==='4'">
+        <el-radio v-model="radio" label="1">加钱</el-radio>
+        <el-radio v-model="radio" label="0">减钱</el-radio>
+      </p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible_1 = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible_1 = false">确 定</el-button>
+        <el-button type="primary" @click="sure_1">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 当点添加的的弹框 -->
@@ -143,19 +154,23 @@
       </p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible_2 = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible_2 = false">确 定</el-button>
+        <el-button type="primary" @click="sure_2">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
+import { mapGetters } from 'vuex'
+import { pageCommon } from '../../assets/js/mixin'
 export default {
   name: 'pushManger',
+  mixins: [pageCommon],
   data () {
     return {
       dialogVisible: false,
       dialogVisible_1: false,
       dialogVisible_2: false,
+      radio: '',
       currentPage: 1,
       pageSize: 5,
       input: '',
@@ -166,78 +181,183 @@ export default {
       input6: '',
       textarea: '',
       textarea1: '',
+      getObj: {},
+      // 推荐人调账获取对应id
+      invitorId: '',
       options: [{
-        value: '选项1',
-        label: '黄金糕'
+        value: '1',
+        label: '无'
       }, {
-        value: '选项2',
-        label: '双皮奶'
+        value: '2',
+        label: '差价'
       }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: '3',
+        label: '固定金额'
       }],
       value: '',
       type: [{
-        value2: '选项1',
-        label: '黄金糕'
+        value2: '1',
+        label: '无'
       }, {
-        value2: '选项2',
-        label: '双皮奶'
+        value2: '2',
+        label: '差价'
+      }, {
+        value2: '3',
+        label: '固定金额'
       }],
       value2: '',
       billType: [{
-        value3: '选项1',
+        value3: '1',
         label: '下单获得利润'
       }, {
-        value3: '选项2',
+        value3: '2',
         label: '利润结算'
       }, {
-        value3: '选项3',
+        value3: '3',
         label: '用户退款扣除利润'
       }, {
-        value3: '选项4',
+        value3: '4',
         label: '其它'
       }],
       value3: '',
-      tableData: [{
-        referees: '张胜男',
-        date: '2017-02-01',
-        type: '无',
-        onePrice: '1.2',
-        referessNum: '5',
-        yu: '3.00',
-        lastDate: '2017-02-01',
-        market: '已付款'
-      }]
+      tableData: [],
+      apiUrl: '/api/invitor/getListByStationIdAndNameAndRakeType'
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'userInfo'
+    ]),
+    params () {
+      return {
+        condition: this.input1,
+        substationId: this.userInfo.substationId,
+        rakeType: this.value,
+        pageNo: this.pageNo,
+        pageSize: this.pageSize
+      }
     }
   },
   methods: {
     handleClick () {
       this.$router.push({ name: 'profits' })
     },
+    // 获取列表的接口
+    setList (data) {
+      this.tableData = data
+    },
     // 当点击修改触发的事件
-    handleClickChange () {
+    handleClickChange (val) {
+      console.log(val)
+      this.input2 = val.invitorName
+      this.input3 = val.invitorTelephone
+      this.value2 = val.rakeType
+      this.input5 = val.rakeMoney
+      this.textarea = val.comment
+      this.getObj = {
+        invitorName: val.invitorName,
+        invitorTelephone: val.invitorTelephone,
+        rakeType: val.rakeType,
+        //  === '1' ? '无' : val.rakeType === '2' ? '差价' : '固定金额'
+        rakeMoney: val.rakeMoney,
+        comment: val.comment,
+        invitorId: val.invitorId
+      }
       this.dialogVisible = true
     },
+    sure () {
+      this.$ajax.post('/api/invitor/updateInvitorInfo', {
+        substationInvitorId: this.getObj.invitorId,
+        telephone: this.input3,
+        name: this.input2,
+        rakeType: this.value2,
+        rakeMoney: this.input5,
+        comment: this.textarea
+      }).then(data => {
+        // console.log(data)
+        if (data.data.code === '200') {
+          this.$message({
+            message: data.data.data,
+            type: 'success'
+          })
+          this.dialogVisible = false
+          this.getList()
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
+    },
     // 当点击调账触发的事件
-    handleClickBill () {
+    handleClickBill (val) {
+      console.log(val)
+      this.invitorId = val.invitorId
+      this.input2 = val.invitorName
+      this.input3 = val.invitorTelephone
       this.dialogVisible_1 = true
+    },
+    sure_1 () {
+      this.$ajax.post('/api/invitor/adjustAccounts', {
+        invitorId: this.invitorId,
+        type: this.value3,
+        money: this.input6,
+        operateUserId: this.userInfo.substationAccountId,
+        comment: this.textarea1,
+        extraType: this.radio
+      }).then(data => {
+        // console.log(data)
+        if (data.data.code === '200') {
+          this.$message({
+            message: data.data.data,
+            type: 'success'
+          })
+          this.dialogVisible_1 = false
+          this.getList()
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
     },
     // 当点击添加推荐人触发事件
     addReferees () {
       this.dialogVisible_2 = true
     },
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+    sure_2 () {
+      this.$ajax.post('/api/invitor/addInvitor', {
+        substationId: this.userInfo.substationId,
+        substationAccountId: this.userInfo.substationAccountId,
+        telephone: this.input3,
+        name: this.input2,
+        rakeType: this.value2,
+        rakeMoney: this.input5,
+        comment: this.textarea
+      }).then(data => {
+        // console.log(data)
+        if (data.data.code === '200') {
+          this.$message({
+            message: data.data.data,
+            type: 'success'
+          })
+          this.dialogVisible_2 = false
+          this.getList()
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
     }
   }
 }

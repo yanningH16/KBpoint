@@ -17,7 +17,7 @@
           </p>
           <p class="first">
             <span>收款账号</span>
-            <el-input v-model="input1" placeholder="请输入内容"></el-input>
+            <el-input disabled v-model="input1" placeholder="请输入内容"></el-input>
           </p>
           <p class="first">
             <span>客服电话</span>
@@ -33,14 +33,17 @@
             <span class="statement">多个客服QQ用逗号</span>
           </p>
           <p class="primary">
-            <el-button type="primary">确定</el-button>
+            <el-button type="primary" @click="sure">确定</el-button>
           </p>
         </el-tab-pane>
         <el-tab-pane label="用户升级规则设置" name="second">
           <el-table :data="tableData" stripe style="width: 700px" border="true">
-            <el-table-column prop="vip" label="会员等级" align="center">
+            <el-table-column prop="levelDetail" label="会员等级" align="center">
             </el-table-column>
-            <el-table-column prop="upgrade" label="升级条件" align="center">
+            <el-table-column prop="conditionNeed" label="升级条件" align="center">
+              <template slot-scope="scope">
+                <span>累计充值满{{scope.row.conditionNeed}}元</span>
+              </template>
             </el-table-column>
             <el-table-column label="操作" align="center">
               <template slot-scope="scope">
@@ -51,9 +54,9 @@
         </el-tab-pane>
         <el-tab-pane label="快递价格设置" name="third">
           <el-table :data="priceSet" stripe style="width: 700px" border="true">
-            <el-table-column prop="company" label="物流公司" align="center">
+            <el-table-column prop="logisticsTypeDetail" label="物流公司" align="center">
             </el-table-column>
-            <el-table-column prop="level" label="会员等级" align="center">
+            <el-table-column prop="levelDetail" label="会员等级" align="center">
             </el-table-column>
             <el-table-column prop="price" label="价格(元/单)" align="center">
             </el-table-column>
@@ -70,11 +73,11 @@
     <div class="cover">
       <el-dialog title="修改升级条件" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
         <span>用户累计</span>
-        <el-input v-model="value1" placeholder="请输入内容"></el-input>
+        <el-input v-model="value1" placeholder=''></el-input>
         <span>元后自动升级到该等级</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="updataLevel">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -85,7 +88,7 @@
         <el-input v-model="value2" placeholder="请输入内容"></el-input>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible_1 = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible_1 = false">确 定</el-button>
+          <el-button type="primary" @click="sure_1">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -105,39 +108,16 @@ export default {
       input4: '',
       dialogVisible: false,
       dialogVisible_1: false,
+      id: '',
       options: [{
         value: '银行卡转账',
         label: '银行卡转账'
       }],
-      value: '',
+      value: '银行卡转账',
       value1: '',
       value2: '',
-      tableData: [{
-        vip: '注册用户',
-        upgrade: '累计充值1元'
-      }, {
-        vip: '注册用户',
-        upgrade: '累计充值1元'
-      }, {
-        vip: '注册用户',
-        upgrade: '累计充值1元'
-      }, {
-        vip: '注册用户',
-        upgrade: '累计充值1元'
-      }],
-      priceSet: [{
-        company: '圆通',
-        level: '注册用户',
-        price: '3.00'
-      }, {
-        company: '圆通',
-        level: '注册用户',
-        price: '3.00'
-      }, {
-        company: '圆通',
-        level: '注册用户',
-        price: '3.00'
-      }]
+      tableData: [],
+      priceSet: []
     }
   },
   computed: {
@@ -145,15 +125,170 @@ export default {
       'userInfo'
     ])
   },
+  created () {
+    this.getInfo()
+  },
   methods: {
     handleClick (tab, event) {
-      // console.log(tab, event)
+      if (this.activeName === 'first') {
+        this.getInfo()
+      } else if (this.activeName === 'second') {
+        this.setInfo()
+      } else if (this.activeName === 'third') {
+        this.getPrice()
+      }
     },
-    handleClickChange () {
+    // 获取分站基本信息
+    getInfo () {
+      this.$ajax.post('/api/substation/getBaseStationInfo', {
+        substationId: this.userInfo.substationId
+      }).then((data) => {
+        console.log(data)
+        let res = data.data.data
+        if (data.data.code === '200') {
+          this.input = res.substationName
+          this.input1 = res.recipetContent
+          this.input2 = res.serviceTelephone
+          this.input3 = res.serviceWechatNum
+          this.input4 = res.serviceQQ
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
+    },
+    // 修改分站的基本信息
+    sure () {
+      this.$ajax.post('/api/substation/updateBaseStationInfo', {
+        substationId: this.userInfo.substationId,
+        substationName: this.input,
+        recipetType: '1',
+        recipetTypeDetail: this.value,
+        recipetContent: this.input1,
+        serviceQQ: this.input4,
+        serviceWechatNum: this.input3,
+        serviceTelephone: this.input2
+      }).then(data => {
+        console.log(data)
+        if (data.data.code === '200') {
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+          this.getInfo()
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
+    },
+    // 获取用户升级规则设置
+    setInfo () {
+      this.$ajax.post('/api/substation/getLevelUpList', {
+        substationId: this.userInfo.substationId
+      }).then((data) => {
+        console.log(data)
+        let res = data.data
+        if (res.code === '200') {
+          let arr = []
+          for (const word of res.data) {
+            let obj = {
+              levelDetail: word.levelDetail,
+              conditionNeed: word.conditionNeed,
+              id: word.id
+            }
+            arr.push(obj)
+          }
+          this.tableData = arr
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
+    },
+    // 用户升级规则设置的修改
+    handleClickChange (val) {
+      this.value1 = ''
       this.dialogVisible = true
+      this.id = val.id
     },
-    handleClickPrice () {
+    updataLevel () {
+      this.$ajax.post('/api/substation/updateLevelUpRule', {
+        id: this.id,
+        condition: this.value1
+      }).then((data) => {
+        console.log(data)
+        if (data.data.code === '200') {
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+          this.dialogVisible = false
+          this.setInfo()
+        }
+      }).catch((error) => {
+        this.$message({
+          message: error,
+          type: 'error'
+        })
+      })
+    },
+    // 获取快递价格设置
+    getPrice () {
+      this.$ajax.post('/api/substation/getChargeRuleList', {
+        substationId: this.userInfo.substationId,
+        logisticType: 1
+      }).then((data) => {
+        console.log(data)
+        let res = data.data
+        if (res.code === '200') {
+          let arr = []
+          for (const word of res.data) {
+            let obj = {
+              logisticsTypeDetail: word.logisticsTypeDetail,
+              levelDetail: word.levelDetail,
+              price: word.price,
+              id: word.id
+            }
+            arr.push(obj)
+          }
+          this.priceSet = arr
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
+    },
+    handleClickPrice (val) {
+      this.id = val.id
       this.dialogVisible_1 = true
+    },
+    sure_1 () {
+      this.$ajax.post('/api/substation/updateChargeRule', {
+        id: this.id,
+        price: this.value2
+      }).then((data) => {
+        // console.log(data)
+        if (data.data.code === '200') {
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+          this.dialogVisible_1 = false
+          this.getPrice()
+        }
+      }).catch((error) => {
+        this.$message({
+          message: error,
+          type: 'error'
+        })
+      })
     }
   }
 }

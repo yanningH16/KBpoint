@@ -40,16 +40,16 @@ export default {
     }
   },
   created () {
-    this.$ajax.get('/ipApi', {
-    }).then((data) => {
-      if (data.status === '200') {
-        this.ip = data.data.ip
-      } else {
-        this.$message.error('获取ip失败')
-      }
-    }).catch(() => {
-      this.$message.error('服务器错误！')
-    })
+    // this.$ajax.get('/ipApi', {
+    // }).then((data) => {
+    //   if (data.status === '200') {
+    //     this.ip = data.data.ip
+    //   } else {
+    //     this.$message.error('获取ip失败')
+    //   }
+    // }).catch(() => {
+    //   this.$message.error('服务器错误！')
+    // })
   },
   methods: {
     LogoIn () {
