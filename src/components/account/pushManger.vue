@@ -239,8 +239,9 @@ export default {
     }
   },
   methods: {
-    handleClick () {
-      this.$router.push({ name: 'profits' })
+    handleClick (val) {
+      console.log(val)
+      this.$router.push({ name: 'profits', query: { invitorId: val.invitorId } })
     },
     // 获取列表的接口
     setList (data) {

@@ -134,6 +134,7 @@ export default {
     .rCont
       flex 1
       overflow auto
+      margin-right 20px
   .confirm
     position absolute
     top 0

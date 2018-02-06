@@ -16,27 +16,27 @@
           </el-date-picker>
         </li>
         <li>
-          <button class="BtnDisable">查询</button>
+          <button class="BtnDisable" @click="search">查询</button>
         </li>
       </ul>
       <div class="table">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="date" label="时间" align="center">
+          <el-table-column prop="gmtCreate" label="时间" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" align="center">
+          <el-table-column prop="typeDetail" label="类型" align="center">
           </el-table-column>
           <el-table-column prop="money" label="金额" align="center">
           </el-table-column>
-          <el-table-column prop="beforeMoney" label="变动前金额" align="center">
+          <el-table-column prop="beforMoney" label="变动前金额" align="center">
           </el-table-column>
-          <el-table-column prop="lasetMoney" label="变动后金额" align="center">
+          <el-table-column prop="afterMoney" label="变动后金额" align="center">
           </el-table-column>
-          <el-table-column prop="market" label="备注" align="center">
+          <el-table-column prop="comment" label="备注" align="center">
           </el-table-column>
         </el-table>
       </div>
       <div class="pager">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
         </el-pagination>
       </div>
     </div>
@@ -60,58 +60,60 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+import { pageCommon } from '../../assets/js/mixin'
+import { mapGetters } from 'vuex'
 export default {
   name: 'rechargeList',
+  mixins: [pageCommon],
   data () {
     return {
       dialogVisible: false,
       currentPage: 1,
       pageSize: 5,
+      apiUrl: '/api/invitor/getWettingPagingListByInvitorId',
       input: '',
       input1: '',
       value1: '',
       textarea: '',
       value3: '',
       options: [{
-        value: '选项1',
-        label: '黄金糕'
+        value: '1',
+        label: '下单获取利润'
       }, {
-        value: '选项2',
-        label: '双皮奶'
+        value: '2',
+        label: '利润结算'
       }, {
-        value: '选项3',
-        label: '蚵仔煎'
+        value: '3',
+        label: '用户退款扣除利润'
       }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: '4',
+        label: '其他'
       }],
       value: '',
-      tableData: [{
-        date: '2017-02-01',
-        type: '下单获得利润',
-        money: '1',
-        beforeMoney: '5',
-        lasetMoney: '6',
-        market: '5468546546'
-      }, {
-        date: '2017-02-01',
-        type: '下单获得利润',
-        money: '1',
-        beforeMoney: '5',
-        lasetMoney: '6',
-        market: '5468546546'
-      }]
+      tableData: []
     }
   },
-  methods: {
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+  computed: {
+    params () {
+      return {
+        invitorId: this.$route.query.invitorId,
+        pageNo: this.pageNo,
+        pageSize: this.pageSize,
+        type: this.value,
+        startTime: this.value3 ? this.value3[0] : null,
+        endTime: this.value3 ? this.value3[1] : null
+      }
     },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+    ...mapGetters([
+      'userInfo'
+    ])
+  },
+  methods: {
+    setList (data) {
+      this.tableData = data
+    },
+    search () {
+      this.getList()
     }
   }
 }

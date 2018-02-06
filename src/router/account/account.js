@@ -8,17 +8,23 @@ const account = [{
   path: 'account/userManger',
   component: userManger,
   name: 'userManger',
-  meta: { title: '用户管理' }
+  meta: {
+    title: '用户管理'
+  }
 }, {
   path: 'account/pushManger',
   component: pushManger,
   name: 'pushManger',
-  meta: { title: '推荐人管理' }
+  meta: {
+    title: '推荐人管理'
+  }
 }, {
-  path: 'account/profits',
+  path: 'account/pushManger/profits',
   component: Profits,
   name: 'profits',
-  meta: { title: '利润明细' }
+  meta: {
+    title: '利润明细'
+  }
 }]
 
 export default account

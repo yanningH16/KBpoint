@@ -63,8 +63,8 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small" v-if="scope.row.stautsDetail!='充值完成'">款已到账</el-button>
-              <el-button type="text" size="small" @click="handleClickCecal(scope.row)" v-if="scope.row.stautsDetail!='充值完成'">驳回订单</el-button>
+              <el-button @click="handleClick(scope.row)" type="text" size="small" v-if="scope.row.stautsDetail==='等待付款'||scope.row.stautsDetail==='等待收款'||scope.row.stautsDetail==='等待收货'">款已到账</el-button>
+              <el-button type="text" size="small" @click="handleClickCecal(scope.row)" v-if="scope.row.stautsDetail==='等待付款'||scope.row.stautsDetail==='等待收款'||scope.row.stautsDetail==='等待收货'">驳回订单</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -191,6 +191,7 @@ export default {
             message: '通过成功'
           })
           this.getList()
+          this.dialogVisible = false
         } else {
           this.$message({
             type: 'warning',
@@ -209,9 +210,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then((data) => {
-        this.$ajax.post('/api/substation/recharge/rejectRechargeSheet', {
-          rechargeId: rechargeId,
-          operateUserId: this.userInfo.substationAccountId
+        this.$ajax.post('/api/seller/recharge/cancelRechargeSheet', {
+          rechargeId: rechargeId
+          // operateUserId: this.userInfo.substationAccountId
         }).then((data) => {
           if (data.data.code === '200') {
             this.$message({

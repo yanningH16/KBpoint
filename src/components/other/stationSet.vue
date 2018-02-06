@@ -295,7 +295,7 @@ export default {
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 .stationSet
-  padding 20px
+  padding 20px 0 20px 20px
   font-size 14px
   .wrap
     background #ffffff

@@ -87,20 +87,23 @@
             <template slot-scope="scope">
               <el-button @click="handleClick(scope.row)" type="text" size="small">设置审核状态</el-button>
               <el-button type="text" size="small" @click="handleClickCecal(scope.row)">设置等级/价格</el-button>
-              <el-button type="text" size="small" @click="pull">更多
-                <i class="el-icon-caret-bottom"></i>
-              </el-button>
+              <el-dropdown @command="userSet">
+                <span style="font-size:12px;color:#409EFF;">
+                  更多
+                  <i class="el-icon-arrow-down"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="[scope.row,1]">设置推荐人</el-dropdown-item>
+                  <el-dropdown-item :command="[scope.row,2]">扣除金额</el-dropdown-item>
+                  <el-dropdown-item :command="[scope.row,3]">禁用</el-dropdown-item>
+                  <el-dropdown-item :command="[scope.row,4]">用户充值</el-dropdown-item>
+                  <el-dropdown-item :command="[scope.row,5]">重置密码</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </template>
           </el-table-column>
         </el-table>
-        <!-- 下拉列表 -->
-        <div class="pull" v-show="pullClick">
-          <p @click="auditPerson">设置推荐人</p>
-          <p @click="stop">禁用</p>
-          <p @click="deduct">扣除余额</p>
-          <p @click="userPay">用户充值</p>
-          <p @click="reset">重置密码</p>
-        </div>
+
       </div>
       <div class="pager">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
@@ -141,22 +144,25 @@
     <!-- 设置推荐人弹框 -->
     <el-dialog title="设置推荐人" :visible.sync="dialogVisible_2" width="30%" :before-close="handleClose">
       <p style="margin-top:20px">
-        <span>推荐人</span>
+        <span>推荐人手机号</span>
         <el-input v-model="input5" placeholder=""></el-input>
       </p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible_2 = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible_2 = false">确 定</el-button>
+        <el-button type="primary" @click="sure_2">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 点击禁用触发的事件 -->
-    <el-dialog title="禁用用户" :visible.sync="dialogVisible_3" width="30%" :before-close="handleClose">
+    <el-dialog title="禁用/解禁用户" :visible.sync="dialogVisible_3" width="30%" :before-close="handleClose">
       <p style="margin-top:20px">
-        你确定禁用6546546用户么
+        <el-select v-model="value5" placeholder="请选择">
+          <el-option v-for="item in userState" :key="item.value5" :label="item.label" :value="item.value5">
+          </el-option>
+        </el-select>
       </p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible_3 = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible_3 = false">确 定</el-button>
+        <el-button type="primary" @click="sure_3">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 扣除金额 -->
@@ -171,17 +177,17 @@
       </p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible_4 = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible_4 = false">确 定</el-button>
+        <el-button type="primary" @click="sure_4">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 点击充值密码触发的事件 -->
     <el-dialog title="重置密码" :visible.sync="dialogVisible_5" width="30%" :before-close="handleClose">
       <p style="margin-top:20px">
-        你确定要充值6546546用户密码么?请谨慎操作
+        你确定要重置{{sellerUserName}}用户密码么?请谨慎操作
       </p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible_5 = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible_5 = false">确 定</el-button>
+        <el-button type="primary" @click="sure_5">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 用户充值 -->
@@ -194,13 +200,13 @@
         <span>备注</span>&nbsp;
         <el-input v-model="input9" placeholder=""></el-input>
       </p>
-      <p style="margin-top:20px">
+      <!-- <p style="margin-top:20px">
         <span>收款卡号</span>&nbsp;
         <el-input v-model="input10" placeholder=""></el-input>
-      </p>
+      </p> -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible_6 = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible_6 = false">确 定</el-button>
+        <el-button type="primary" @click="sure_6">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -222,6 +228,7 @@ export default {
       dialogVisible_6: false,
       pullClick: false,
       currentPage: 1,
+      sellerUserName: '',
       pageSize: 20,
       input: '',
       input1: '',
@@ -301,21 +308,7 @@ export default {
         value2: '4',
         label: '皇冠用户'
       }],
-      tableData: [{
-        name: '5454545454',
-        phone: '1510251321031',
-        QQ: '15415154',
-        wechat: '54654546546',
-        yu: '5',
-        cumulative: '11',
-        level: 5,
-        price: 5,
-        state: '正常',
-        waitingState: '审核通过',
-        date: '2017-02-01',
-        referees: '卧槽',
-        invitation: 'dfld'
-      }],
+      tableData: [],
       apiUrl: '/api/seller/getPagingSellerListByCondtion'
     }
   },
@@ -398,28 +391,147 @@ export default {
         console.log(err)
       })
     },
-    pull () {
-      this.pullClick = !this.pullClick
+    userSet (val) {
+      console.log(val)
+      this.sellerAccountId = val[0].sellerAccountId
+      this.sellerUserName = val[0].userName
+      // 当点击设置推荐人触发的事件
+      if (val[1] === 1) {
+        this.dialogVisible_2 = true
+      }
+      // 当点击扣除金额触发的事件
+      if (val[1] === 2) {
+        this.dialogVisible_4 = true
+      }
+      // 当点击禁用触发的事件
+      if (val[1] === 3) {
+        this.dialogVisible_3 = true
+      }
+      // 当点击用户充值触发的事件
+      if (val[1] === 4) {
+        this.dialogVisible_6 = true
+      }
+      // 当点击重置密码触发的事件
+      if (val[1] === 5) {
+        this.dialogVisible_5 = true
+      }
     },
-    // 当点击设置推荐人触发的事件
-    auditPerson () {
-      this.dialogVisible_2 = true
+    // 设置推荐人接口
+    sure_2 () {
+      this.$ajax.post('/api/seller/setInvitor', {
+        sellerAccountId: this.sellerAccountId,
+        invitorTelephone: this.input5
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            type: 'success',
+            message: '设置成功'
+          })
+          this.dialogVisible_2 = false
+          this.getList()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: data.data.message
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     },
-    // 当点击禁用的时候触发
-    stop () {
-      this.dialogVisible_3 = true
+    // 设置是否禁用
+    sure_3 () {
+      this.$ajax.post('/api/seller/setAccountStatus', {
+        sellerAccountId: this.sellerAccountId,
+        accountStatus: this.value5
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            type: 'success',
+            message: '设置成功'
+          })
+          this.dialogVisible_3 = false
+          this.getList()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: data.data.message
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     },
-    // 当点击扣除金额触发的事件
-    deduct () {
-      this.dialogVisible_4 = true
+    // 扣除金额
+    sure_4 () {
+      this.$ajax.post('/api/seller/recharge/reduceMoneyFromSellerFund', {
+        sellerAccountId: this.sellerAccountId,
+        money: this.input6,
+        comment: this.input7,
+        operateUserId: this.userInfo.channelAccountId
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            type: 'success',
+            message: '扣除成功'
+          })
+          this.dialogVisible_4 = false
+          this.getList()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: data.data.message
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     },
-    // 当点击用户充值触发的事件
-    userPay () {
-      this.dialogVisible_6 = true
+    // 给商家充值钱
+    sure_6 () {
+      this.$ajax.post('/api/seller/recharge/addMoneyToSellerFund', {
+        sellerAccountId: this.sellerAccountId,
+        money: this.input8,
+        comment: this.input9,
+        operateUserId: this.userInfo.channelAccountId
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            type: 'success',
+            message: '扣除成功'
+          })
+          this.dialogVisible_6 = false
+          this.getList()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: data.data.message
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     },
-    // 当点击充值密码触发的事件
-    reset () {
-      this.dialogVisible_5 = true
+    sure_5 () {
+      this.$ajax.post('/api/seller/initPwd', {
+        sellerAccountId: this.sellerAccountId
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            type: 'success',
+            message: '密码重置成功'
+          })
+          this.dialogVisible_5 = false
+          this.getList()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: data.data.message
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }
