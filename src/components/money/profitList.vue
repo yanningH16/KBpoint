@@ -14,7 +14,7 @@
           </el-table-column>
           <el-table-column prop="orderNum" label="订单数" align="center">
           </el-table-column>
-          <el-table-column prop="makeOrderUserNum" label="下单任务数" align="center">
+          <el-table-column prop="makeOrderUserNum" label="下单用户数" align="center">
           </el-table-column>
           <el-table-column prop="newRechargeNum" label="新用户充值数" align="center">
           </el-table-column>
@@ -26,7 +26,7 @@
           </el-table-column>
           <el-table-column prop="rechargeSum" label="用户账户余额" align="center">
           </el-table-column>
-          <el-table-column prop="xiaofei" label="用户消费余额" align="center">
+          <el-table-column prop="sellerCost" label="用户消费余额" align="center">
           </el-table-column>
           <el-table-column prop="profit" label="利润" align="center">
           </el-table-column>

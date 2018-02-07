@@ -16,11 +16,6 @@
             <input type="password" placeholder="输入登录密码" v-model="password" @focus="focusPass=true" @blur="focusPass=false">
           </div>
           <button @click="LogoIn">登&nbsp;录</button>
-          <h3>
-            <span class="hover">
-              <router-link :to="{ name: 'sign', params: { userId: 123 }}">忘记密码 </router-link>
-            </span>
-          </h3>
         </div>
       </div>
     </div>

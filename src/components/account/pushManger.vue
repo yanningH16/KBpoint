@@ -29,7 +29,7 @@
           </el-table-column>
           <el-table-column prop="invitorCode" label="复制邀请码链接" align="center">
             <template slot-scope="scope">
-              <span @click="copy(scope.row)">复制链接</span>
+              <span style="color:red" class="copy" :data-clipboard-text='content' @click="copy(scope.row)">复制链接</span>
             </template>
           </el-table-column>
           <el-table-column prop="rakeType" label="抽成类型" align="center">
@@ -167,6 +167,7 @@
 <script type="text/ecmascript-6">
 import { mapGetters } from 'vuex'
 import { pageCommon } from '../../assets/js/mixin'
+import Clipboard from 'clipboard'
 export default {
   name: 'pushManger',
   mixins: [pageCommon],
@@ -186,6 +187,7 @@ export default {
       input6: '',
       textarea: '',
       textarea1: '',
+      content: '',
       getObj: {},
       // 推荐人调账获取对应id
       invitorId: '',
@@ -246,10 +248,20 @@ export default {
   methods: {
     copy (val) {
       console.log(val)
-      // let copy = val.invitorCode
+      let copy = val.invitorCode
       this.$ajax.post('/api/invitor/getRegisterUrl', {
       }).then((data) => {
         console.log(data)
+        if (data.data.code === '200') {
+          var clipboard = new Clipboard('.copy')
+          clipboard.on('success', (e) => {
+            this.$message({
+              message: '复制成功！',
+              type: 'success'
+            })
+          })
+          this.content = data.data.data.registerUrl + copy
+        }
       })
     },
     handleClick (val) {

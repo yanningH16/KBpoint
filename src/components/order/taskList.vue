@@ -34,21 +34,29 @@
       </ul>
       <div class="table">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="date" label="提交日期" align="center">
+          <el-table-column prop="gmtCreate" label="提交日期" align="center">
           </el-table-column>
-          <el-table-column prop="taskNum" label="任务编号" align="center">
+          <el-table-column prop="sellerTaskId" label="任务编号" align="center">
           </el-table-column>
-          <el-table-column prop="name" label="用户名" align="center">
+          <el-table-column prop="userName" label="用户名" align="center">
           </el-table-column>
-          <el-table-column prop="company" label="快递公司" align="center">
+          <el-table-column prop="logisticsType" label="快递公司" align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.logisticsType==='1'">圆通</span>
+            </template>
           </el-table-column>
-          <el-table-column prop="orderNum" label="订单数" align="center">
+          <el-table-column prop="importTotalNum" label="订单数" align="center">
           </el-table-column>
           <el-table-column prop="price" label="单价" align="center">
           </el-table-column>
-          <el-table-column prop="tasktotalPrice" label="任务总价" align="center">
+          <el-table-column prop="actualCost" label="任务总价" align="center">
           </el-table-column>
-          <el-table-column prop="state" label="付款状态" align="center">
+          <el-table-column prop="status" label="付款状态" align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.status==='0'">未付款</span>
+              <span v-if="scope.row.status==='1'">已付款</span>
+              <span v-if="scope.row.status==='2'">已撤销</span>
+            </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
@@ -58,7 +66,7 @@
         </el-table>
       </div>
       <div class="pager">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
         </el-pagination>
       </div>
     </div>
@@ -82,8 +90,11 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+import { pageCommon } from '../../assets/js/mixin'
+import { mapGetters } from 'vuex'
 export default {
   name: 'rechargeList',
+  mixins: [pageCommon],
   data () {
     return {
       dialogVisible: false,
@@ -94,49 +105,50 @@ export default {
       value1: '',
       textarea: '',
       value3: '',
+      apiUrl: '/api/order/search/getSellerTaskByCondition',
       options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: '1',
+        label: '圆通'
       }],
       value: '',
       payState: [{
-        value4: '选项2',
-        label: '双皮奶'
+        value4: '0',
+        label: '未支付'
       }, {
-        value4: '选项3',
-        label: '蚵仔煎'
+        value4: '1',
+        label: '支付成功'
       }, {
-        value4: '选项4',
-        label: '龙须面'
+        value4: '2',
+        label: '任务删除'
       }],
       value4: '',
-      tableData: [{
-        name: '5454545454',
-        date: '2017-02-01',
-        taskNum: '546546546546',
-        company: '圆通',
-        orderNum: '5',
-        price: '3.00',
-        tasktotalPrice: '15.00',
-        state: '已付款'
-      }]
+      tableData: []
     }
   },
+  computed: {
+    params () {
+      return {
+        currPageNo: this.pageNo,
+        limit: this.pageSize,
+        startTime: this.value3 ? this.value3[0] : null,
+        endTime: this.value3 ? this.value3[1] : null,
+        logisticsType: this.value,
+        sellerTaskId: this.input1
+      }
+    },
+    ...mapGetters([
+      'userInfo'
+    ])
+  },
   methods: {
-    handleClick () {
-      this.dialogVisible = true
+    handleClick (val) {
+      this.$router.push({ name: 'orderList', query: { sellerTaskId: val.sellerTaskId } })
+    },
+    search () {
+      this.getTask()
+    },
+    setList (data) {
+      this.tableData = data
     },
     handleClickCecal () {
       this.$confirm('你确认取消订单么? 请谨慎操作', '取消订单', {
@@ -154,12 +166,6 @@ export default {
           message: '已取消删除'
         })
       })
-    },
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
     }
   }
 }
