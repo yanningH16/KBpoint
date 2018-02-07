@@ -27,6 +27,11 @@
           </el-table-column>
           <el-table-column prop="invitorCode" label="邀请码" align="center">
           </el-table-column>
+          <el-table-column prop="invitorCode" label="复制邀请码链接" align="center">
+            <template slot-scope="scope">
+              <span @click="copy(scope.row)">复制链接</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="rakeType" label="抽成类型" align="center">
             <template slot-scope="scope">
               <span v-if="scope.row.rakeType==='1'">无</span>
@@ -239,6 +244,14 @@ export default {
     }
   },
   methods: {
+    copy (val) {
+      console.log(val)
+      // let copy = val.invitorCode
+      this.$ajax.post('/api/invitor/getRegisterUrl', {
+      }).then((data) => {
+        console.log(data)
+      })
+    },
     handleClick (val) {
       console.log(val)
       this.$router.push({ name: 'profits', query: { invitorId: val.invitorId } })
