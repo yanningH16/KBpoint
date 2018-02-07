@@ -28,11 +28,11 @@
       </ul>
       <ul style="margin-top:20px">
         <li>
-          任务号:
+          任务号:&nbsp;&nbsp;&nbsp;&nbsp;
           <el-input v-model="value6" placeholder="请输入编号"></el-input>
         </li>
         <li>
-          <span>订单号:</span>
+          <span>订单号:&nbsp;&nbsp;&nbsp;&nbsp;</span>
           <el-input v-model="input2" placeholder="请输入编号"></el-input>
         </li>
         <li>
@@ -46,7 +46,7 @@
           <el-input v-model="input1" placeholder="请输入编号"></el-input>
         </li>
         <li>
-          用户名:
+          用户名:&nbsp;&nbsp;&nbsp;&nbsp;
           <el-input v-model="input3" placeholder=""></el-input>
         </li>
         <li>
