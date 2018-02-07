@@ -93,8 +93,8 @@
           <el-table-column prop="receiveName" label="收货信息" width="200">
             <template slot-scope="scope">
               <p>收货人姓名:{{scope.row.receiveName}}</p>
-              <p>发货人电话：{{scope.row.userName}}</p>
-              <p>发货人地址：{{scope.row.receiveProvince+scope.row.receiveCity+scope.row.receiveRegion+scope.row.receiveAddress}}</p>
+              <p>收货人电话：{{scope.row.receiveTelephone}}</p>
+              <p>收货人地址：{{scope.row.receiveProvince+scope.row.receiveCity+scope.row.receiveRegion+scope.row.receiveAddress}}</p>
             </template>
           </el-table-column>
           <el-table-column prop="orderInfo" label="订单信息" width="200">
@@ -117,7 +117,6 @@
           <el-table-column prop="sellerOrderId" label="任务号" width="120" align="center" fixed='right'>
           </el-table-column>
         </el-table>
-
       </div>
       <div class="pager">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizeArray" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
