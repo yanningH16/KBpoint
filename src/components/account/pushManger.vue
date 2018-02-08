@@ -15,7 +15,7 @@
           </el-select>
         </li>
         <li>
-          <button class="BtnDisable">查询</button>
+          <button class="BtnDisable" @click="search">查询</button>
         </li>
         <li>
           <button class="centerBtn" @click="addReferees">添加推荐人</button>
@@ -267,6 +267,10 @@ export default {
     handleClick (val) {
       console.log(val)
       this.$router.push({ name: 'profits', query: { invitorId: val.invitorId } })
+    },
+    // 点击查询触发
+    search () {
+      this.getList()
     },
     // 获取列表的接口
     setList (data) {

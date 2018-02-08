@@ -5,7 +5,7 @@
       <span>日期查询</span>
       <el-date-picker v-model="value3" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format='yyyy-MM-dd' format='yyyy-MM-dd'>
       </el-date-picker>
-      <button class="BtnDisable">查询</button>
+      <button class="BtnDisable" @click="search">查询</button>
       <div class="table">
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="gmtCreate" label="日期" align="center">
@@ -68,6 +68,9 @@ export default {
     ])
   },
   methods: {
+    search () {
+      this.getList()
+    },
     setList (data) {
       this.tableData = data
     }

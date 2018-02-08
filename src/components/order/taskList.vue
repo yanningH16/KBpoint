@@ -29,7 +29,7 @@
           </el-date-picker>
         </li>
         <li>
-          <button class="BtnDisable">查询</button>
+          <button class="BtnDisable" @click="search">查询</button>
         </li>
       </ul>
       <div class="table">
@@ -133,7 +133,8 @@ export default {
         startTime: this.value3 ? this.value3[0] : null,
         endTime: this.value3 ? this.value3[1] : null,
         logisticsType: this.value,
-        sellerTaskId: this.input1
+        sellerTaskId: this.input1,
+        status: this.value4
       }
     },
     ...mapGetters([
@@ -145,7 +146,7 @@ export default {
       this.$router.push({ name: 'orderList', query: { sellerTaskId: val.sellerTaskId } })
     },
     search () {
-      this.getTask()
+      this.getList()
     },
     setList (data) {
       this.tableData = data

@@ -46,7 +46,7 @@
           <el-input v-model="input" placeholder=""></el-input>
         </li>
         <li>
-          <button class="BtnDisable">查询</button>
+          <button class="BtnDisable" @click="search">查询</button>
         </li>
       </ul>
       <div class="table">
@@ -332,6 +332,10 @@ export default {
     ])
   },
   methods: {
+    // 点击查询请求接口
+    search () {
+      this.getList()
+    },
     // 获取列表
     setList (data) {
       this.tableData = data
