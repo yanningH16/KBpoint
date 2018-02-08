@@ -58,14 +58,14 @@
           </el-table-column>
           <el-table-column prop="statusDetail" label="状态" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="checkStatus" label="审核状态" width="120" align="center">
+          <!-- <el-table-column prop="checkStatus" label="审核状态" width="120" align="center">
             <template slot-scope="scope">
               <span v-if="scope.row.checkStatus==='0'">未提交</span>
               <span v-if="scope.row.checkStatus==='1'">未审核</span>
               <span v-if="scope.row.checkStatus==='2'">审核未通过</span>
               <span v-if="scope.row.checkStatus==='3'">审核通过</span>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column prop="gmtCreate" label="注册时间" width="160" align="center">
           </el-table-column>
           <el-table-column prop="invitorName" label="推荐人" width="150" align="center">

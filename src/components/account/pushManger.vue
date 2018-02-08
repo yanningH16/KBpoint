@@ -337,6 +337,13 @@ export default {
       this.dialogVisible_1 = true
     },
     sure_1 () {
+      if (this.invitorId === '' || this.value3 === '' || this.input6 === '' || this.textarea1 === '') {
+        this.$message({
+          message: '请正确填写内容!!!',
+          type: 'warning'
+        })
+        return false
+      }
       this.$ajax.post('/api/invitor/adjustAccounts', {
         invitorId: this.invitorId,
         type: this.value3,
