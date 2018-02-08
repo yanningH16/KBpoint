@@ -19,13 +19,13 @@
           </el-select>
         </li>
         <li>
-          订单号:
+          交易号:
           <el-input v-model="input1" placeholder="请输入编号"></el-input>
         </li>
       </ul>
       <ul class="ulTow">
         <li>
-          <span>用户名:</span>
+          <span>用户名:&nbsp;&nbsp;&nbsp;&nbsp;</span>
           <el-input v-model="input" placeholder="请输入编号"></el-input>
         </li>
         <!-- <li>
@@ -58,8 +58,6 @@
           <el-table-column prop="stautsDetail" label="状态" width="120" align="center">
           </el-table-column>
           <el-table-column prop="afterMoney" label="充值后金额" width="120" align="center">
-          </el-table-column>
-          <el-table-column prop="comment" label="备注" width="120" align="center">
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template slot-scope="scope">
@@ -116,23 +114,14 @@ export default {
       }],
       value: '',
       payState: [{
-        value4: '1',
-        label: '等待付款'
-      }, {
-        value4: '2',
-        label: '等待收货'
-      }, {
         value4: '3',
-        label: '等待收款'
+        label: '待审核'
       }, {
         value4: '4',
         label: '充值失败'
       }, {
-        value4: '5',
-        label: '订单取消'
-      }, {
         value4: '6',
-        label: '充值完成'
+        label: '充值成功'
       }],
       value4: '',
       tableData: [{

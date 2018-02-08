@@ -29,7 +29,7 @@
           </el-table-column>
           <el-table-column prop="invitorCode" label="复制邀请码链接" align="center">
             <template slot-scope="scope">
-              <span style="color:red" class="copy" :data-clipboard-text='content' @click="copy(scope.row)">复制链接</span>
+              <span style="color:red;cursor: pointer" class="copy" :data-clipboard-text='content' @click="copy(scope.row)">复制链接</span>
             </template>
           </el-table-column>
           <el-table-column prop="rakeType" label="抽成类型" align="center">
@@ -261,7 +261,13 @@ export default {
             })
           })
           this.content = data.data.data.registerUrl + copy
+        } else {
+          this.$message({
+            message: '复制失败,请重试',
+            type: 'warning'
+          })
         }
+      }).catch(() => {
       })
     },
     handleClick (val) {

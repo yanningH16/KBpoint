@@ -24,27 +24,20 @@
             </el-option>
           </el-select>
         </li>
-
-      </ul>
-      <ul style="margin-top:20px">
-        <li>
-          用户名:&nbsp;&nbsp;&nbsp;&nbsp;
-          <el-input v-model="input1" placeholder=""></el-input>
-        </li>
-        <li>
-          <span>电话:</span>
-          <el-input v-model="input2" placeholder=""></el-input>
-        </li>
-        <li>
-          IP:
-          <el-input v-model="input3" placeholder=""></el-input>
-        </li>
       </ul>
       <ul class="ulTow">
         <li>
-          QQ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <el-input v-model="input" placeholder=""></el-input>
+          <span style="margin-right:13px">用户名:</span>
+          <el-input v-model="input1" placeholder=""></el-input>
         </li>
+        <li>
+          <span style="margin-right:30px">电话:</span>
+          <el-input v-model="input2" placeholder=""></el-input>
+        </li>
+        <!-- <li>
+          <span style="margin-right:42px">IP:</span>
+          <el-input v-model="input3" placeholder=""></el-input>
+        </li> -->
         <li>
           <button class="BtnDisable" @click="search">查询</button>
         </li>
@@ -55,11 +48,7 @@
           </el-table-column>
           <el-table-column prop="telephone" label="手机" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="QQ" label="QQ" width="120" align="center">
-          </el-table-column>
-          <el-table-column prop="wechat" label="微信" width="120" align="center">
-          </el-table-column>
-          <el-table-column prop="yu" label="余额" width="120" align="center">
+          <el-table-column prop="balance" label="余额" width="120" align="center">
           </el-table-column>
           <el-table-column prop="rechargeSum" label="累计充值" width="120" align="center">
           </el-table-column>
@@ -126,15 +115,15 @@
     <el-dialog title="设置用户等级和价格" :visible.sync="dialogVisible_1" width="30%" :before-close="handleClose">
       <p style="margin-left:28px">
         <span>等级</span>
-        <el-select v-model="value2" placeholder="请选择">
+        <el-select v-model="value2" placeholder="请选择" @change="getLevel">
           <el-option v-for="item in level" :key="item.value2" :label="item.label" :value="item.value2">
           </el-option>
         </el-select>
       </p>
       <p style="margin-top:20px">
         <span>圆通价格</span>
-        <el-input v-model="input4" placeholder=""></el-input> <br>
-        <em style="font-size:12px;color:#ff3341;margin-left:58px">皇冠以上可自定义价格</em>
+        <el-input :disabled="disabled" v-model="input4" placeholder=""></el-input> <br>
+        <em style="font-size:12px;color:#ff3341;margin-left:58px">最低价格不能低于2.8元</em>
       </p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible_1 = false">取 消</el-button>
@@ -226,6 +215,7 @@ export default {
       dialogVisible_4: false,
       dialogVisible_5: false,
       dialogVisible_6: false,
+      disabled: true,
       pullClick: false,
       currentPage: 1,
       sellerUserName: '',
@@ -270,6 +260,12 @@ export default {
       }, {
         value4: '4',
         label: '皇冠用户'
+      }, {
+        value4: '11',
+        label: '渠道用户'
+      }, {
+        value4: '12',
+        label: '代理商'
       }],
       value4: '',
       userState: [{
@@ -307,6 +303,12 @@ export default {
       }, {
         value2: '4',
         label: '皇冠用户'
+      }, {
+        value2: '11',
+        label: '渠道用户'
+      }, {
+        value2: '12',
+        label: '代理商'
       }],
       tableData: [],
       apiUrl: '/api/seller/getPagingSellerListByCondtion'
@@ -371,8 +373,40 @@ export default {
     handleClickCecal (val) {
       this.dialogVisible_1 = true
       this.sellerAccountId = val.sellerAccountId
+      this.value2 = val.level
+      this.input4 = val.price
+    },
+    getLevel () {
+      if (this.value2 === '11' || this.value2 === '12') {
+        this.disabled = false
+      } else {
+        this.disabled = true
+      }
+      this.$ajax.post('/api/substation/getPriceByLevelByStationId', {
+        substationId: this.userInfo.substationId,
+        level: this.value2
+      }).then((data) => {
+        let res = data.data
+        if (res.code === '200') {
+          this.input4 = res.data.price
+        } else {
+          this.$message({
+            type: 'warning',
+            message: data.data.message
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     sure_1 () {
+      if (this.input4 < 2.8) {
+        this.$message({
+          type: 'warning',
+          message: '设置价格不能低于2.8元'
+        })
+        return false
+      }
       this.$ajax.post('/api/seller/setLevelAndPrice', {
         sellerAccountId: this.sellerAccountId,
         price: this.input4,

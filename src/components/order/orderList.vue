@@ -211,7 +211,7 @@ export default {
         logisticsType: this.value,
         payStatus: this.value4,
         orderStatus: this.value5,
-        sellerOrderId: this.input2,
+        thirdOrderId: this.input2,
         receiveTelephone: this.input,
         sellerTaskId: this.value6,
         logisticsOrderId: this.input1,
