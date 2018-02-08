@@ -344,6 +344,13 @@ export default {
         })
         return false
       }
+      if (this.input6 < 0) {
+        this.$message({
+          message: '输入的金额不能小于0',
+          type: 'warning'
+        })
+        return false
+      }
       this.$ajax.post('/api/invitor/adjustAccounts', {
         invitorId: this.invitorId,
         type: this.value3,
