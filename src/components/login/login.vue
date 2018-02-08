@@ -9,7 +9,7 @@
         <div class="inputCont">
           <div class="input" :class="{ 'active': focus }">
             <img src="../../assets/images/phone.png" alt="">
-            <input type="type" placeholder="输入账号" v-model="username" @focus="focus=true" @blur="focus=false" autofocus autocomplete="on">
+            <input type="text" placeholder="输入账号" v-model="username" @focus="focus=true" @blur="focus=false" autofocus autocomplete="on">
           </div>
           <div class="input" :class="{ 'active': focusPass }">
             <img src="../../assets/images/password.png" alt="">
