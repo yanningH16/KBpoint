@@ -51,6 +51,7 @@
               </template>
             </el-table-column>
           </el-table>
+          <div class="cover"></div>
         </el-tab-pane>
         <el-tab-pane label="快递价格设置" name="third">
           <el-table :data="priceSet" stripe style="width: 700px" border="true">
@@ -270,6 +271,13 @@ export default {
       this.dialogVisible_1 = true
     },
     sure_1 () {
+      if (this.value2 < 2.8) {
+        this.$message({
+          message: '修改价格不能低于2.8/单',
+          type: 'warning'
+        })
+        return false
+      }
       this.$ajax.post('/api/substation/updateChargeRule', {
         id: this.id,
         price: this.value2
@@ -322,4 +330,11 @@ export default {
     .primary
       margin-left 233px
       margin-top 40px
+    .cover
+      width 700px
+      height 120px
+      background white
+      position absolute
+      top 271px
+      left 0
 </style>

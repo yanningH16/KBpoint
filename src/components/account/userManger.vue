@@ -502,6 +502,13 @@ export default {
     },
     // 扣除金额
     sure_4 () {
+      if (this.input6 === '' || this.input7 === '') {
+        this.$message({
+          type: 'warning',
+          message: '请正确填写内容!!!'
+        })
+        return false
+      }
       this.$ajax.post('/api/seller/recharge/reduceMoneyFromSellerFund', {
         sellerAccountId: this.sellerAccountId,
         money: this.input6,
