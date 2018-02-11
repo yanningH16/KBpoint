@@ -41,11 +41,11 @@
         <el-table :data="tableData" border style="width: 100%">
           <el-table-column prop="userName" fixed label="用户名" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="gmtCreate" label="提交日期" width="180" align="center">
+          <el-table-column prop="gmtCreate" label="提交日期" width="230" align="center">
           </el-table-column>
-          <el-table-column prop="passTime" label="到账日期" width="180" align="center">
+          <el-table-column prop="passTime" label="到账日期" width="230" align="center">
           </el-table-column>
-          <el-table-column prop="rechargeId" label="交易号" width="190" align="center">
+          <el-table-column prop="rechargeId" label="交易号" width="250" align="center">
           </el-table-column>
           <el-table-column prop="money" label="充值金额" width="120" align="center">
           </el-table-column>
@@ -55,7 +55,7 @@
           </el-table-column>
           <el-table-column prop="beforMoney" label="充值前金额" width="120" align="center">
           </el-table-column>
-          <el-table-column prop="stautsDetail" label="状态" width="120" align="center">
+          <el-table-column prop="stautsDetail" label="状态" width="150" align="center">
           </el-table-column>
           <el-table-column prop="afterMoney" label="充值后金额" width="120" align="center">
           </el-table-column>
@@ -165,7 +165,6 @@ export default {
       this.tableData = data
     },
     handleClick (val) {
-      console.log(val)
       this.dialogVisible = true
       this.rechargeId = val.rechargeId
     },
@@ -192,7 +191,6 @@ export default {
       })
     },
     handleClickCecal (data) {
-      console.log(data)
       let rechargeId = data.rechargeId
       this.$confirm('你确认取消订单么? 请谨慎操作', '取消订单', {
         confirmButtonText: '确定',

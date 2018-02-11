@@ -70,7 +70,7 @@
           </el-table-column>
           <el-table-column prop="invitorName" label="推荐人" width="150" align="center">
           </el-table-column>
-          <el-table-column prop="invitedCode" label="邀请码" width="150" align="center">
+          <el-table-column prop="invitedCode" label="邀请码" width="320" align="center">
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="250" align="center">
             <template slot-scope="scope">
@@ -430,7 +430,6 @@ export default {
       })
     },
     userSet (val) {
-      console.log(val)
       this.sellerAccountId = val[0].sellerAccountId
       this.sellerUserName = val[0].userName
       // 当点击设置推荐人触发的事件

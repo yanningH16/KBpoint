@@ -116,8 +116,8 @@ export default {
   methods: {
     setRouterActive () {
       this.$nextTick(() => {
-        let activeRouter = this.$route.path
-        console.log(activeRouter)
+        // let activeRouter = this.$route.path
+        // console.log(activeRouter)
       })
     },
     changeShow (index) {

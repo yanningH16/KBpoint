@@ -83,14 +83,14 @@
               <span v-if="scope.row.shopType==='5'">其它</span>
             </template>
           </el-table-column>
-          <el-table-column prop="senderName" label="发货信息" width="200">
+          <el-table-column prop="senderName" label="发货信息" width="380">
             <template slot-scope="scope">
               <p>发货人姓名:{{scope.row.senderName}}</p>
               <p>发货人电话：{{scope.row.senderTelephone}}</p>
               <p>发货人地址：{{scope.row.senderProvince+scope.row.senderCity+scope.row.senderRegion+scope.row.senderAddress}}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="receiveName" label="收货信息" width="200">
+          <el-table-column prop="receiveName" label="收货信息" width="380">
             <template slot-scope="scope">
               <p>收货人姓名:{{scope.row.receiveName}}</p>
               <p>收货人电话：{{scope.row.receiveTelephone}}</p>
@@ -231,13 +231,11 @@ export default {
       this.tableData = data
     },
     handSelect (val) {
-      // console.log(val)
       let arr = []
       for (let i = 0; i < val.length; i++) {
         arr.push(val[i].sellerOrderId)
       }
       this.sellerOrderIds = arr
-      console.log(this.sellerOrderIds)
     },
     // 当点击重新获取的时候进行请求
     getOrderId () {
@@ -251,7 +249,6 @@ export default {
       this.$ajax.post('/api/order/operate/reGetLogisticsOrderIds', {
         sellerOrderIds: this.sellerOrderIds
       }).then((data) => {
-        console.log(data)
         if (data.data.code === '200') {
           this.$message({
             type: 'success',

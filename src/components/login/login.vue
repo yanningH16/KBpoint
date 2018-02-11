@@ -37,7 +37,6 @@ export default {
   created () {
     this.$ajax.get('/ipApi', {
     }).then((data) => {
-      console.log(data)
       if (data.statusText === 'OK') {
         this.ip = data.data.ip
       } else {
@@ -67,7 +66,6 @@ export default {
           password: md5(this.password),
           ip: this.ip
         }).then(data => {
-          // console.log(data)
           if (data.data.code === '200') {
             this.setUserInfo(data.data.data)
             this.setUserToken(data.headers.accesstoken)

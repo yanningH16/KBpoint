@@ -144,7 +144,6 @@ export default {
       this.$ajax.post('/api/substation/getBaseStationInfo', {
         substationId: this.userInfo.substationId
       }).then((data) => {
-        console.log(data)
         let res = data.data.data
         if (data.data.code === '200') {
           this.input = res.substationName
@@ -174,7 +173,6 @@ export default {
         serviceWechatNum: this.input3,
         serviceTelephone: this.input2
       }).then(data => {
-        console.log(data)
         if (data.data.code === '200') {
           this.$message({
             message: '修改成功',
@@ -196,7 +194,6 @@ export default {
       this.$ajax.post('/api/substation/getLevelUpList', {
         substationId: this.userInfo.substationId
       }).then((data) => {
-        console.log(data)
         let res = data.data
         if (res.code === '200') {
           let arr = []
@@ -225,7 +222,6 @@ export default {
         id: this.id,
         condition: this.value1
       }).then((data) => {
-        console.log(data)
         if (data.data.code === '200') {
           this.$message({
             message: '修改成功',
@@ -247,7 +243,6 @@ export default {
         substationId: this.userInfo.substationId,
         logisticType: 1
       }).then((data) => {
-        console.log(data)
         let res = data.data
         if (res.code === '200') {
           let arr = []
@@ -282,7 +277,6 @@ export default {
         id: this.id,
         price: this.value2
       }).then((data) => {
-        // console.log(data)
         if (data.data.code === '200') {
           this.$message({
             message: '修改成功',

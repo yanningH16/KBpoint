@@ -193,7 +193,6 @@ export default {
       this.$ajax.post('/api/substation/getBalance', {
         substationId: this.userInfo.substationId
       }).then((data) => {
-        console.log(data)
         if (data.data.code === '200') {
           this.getMon = data.data.data.balance
         } else {
@@ -251,7 +250,6 @@ export default {
         comment: this.input3,
         money: this.input4 + '.' + this.pointNum
       }).then((data) => {
-        console.log(data)
         let res = data.data
         if (res.code === '200') {
           this.$ajax.post('/api/substation/recharge/confirmAlreadyPaid', {
@@ -296,7 +294,6 @@ export default {
       this.$ajax.post('/api/substation/recharge/getSubstationRecipetContent', {
         substationAccountId: this.userInfo.substationAccountId
       }).then((data) => {
-        console.log(data)
         let res = data.data
         if (res.code === '200') {
           this.getBankInfo = {
@@ -340,12 +337,10 @@ export default {
     },
     // 点点击查看充值单触发的信息
     handleClick (index, data) {
-      console.log(index, data)
       this.toview = true
       this.$ajax.post('/api/substation/recharge/getRechargeSheetByRechargeId', {
         rechargeId: this.tableData[index].payWater
       }).then((data) => {
-        console.log(data)
         let res = data.data
         if (res.code === '200') {
           let goods = {

@@ -247,11 +247,9 @@ export default {
   },
   methods: {
     copy (val) {
-      console.log(val)
       let copy = val.invitorCode
       this.$ajax.post('/api/invitor/getRegisterUrl', {
       }).then((data) => {
-        console.log(data)
         if (data.data.code === '200') {
           var clipboard = new Clipboard('.copy')
           clipboard.on('success', (e) => {
@@ -271,7 +269,6 @@ export default {
       })
     },
     handleClick (val) {
-      console.log(val)
       this.$router.push({ name: 'profits', query: { invitorId: val.invitorId } })
     },
     // 点击查询触发
@@ -284,7 +281,6 @@ export default {
     },
     // 当点击修改触发的事件
     handleClickChange (val) {
-      console.log(val)
       this.input2 = val.invitorName
       this.input3 = val.invitorTelephone
       this.value2 = val.rakeType
@@ -310,7 +306,6 @@ export default {
         rakeMoney: this.input5,
         comment: this.textarea
       }).then(data => {
-        // console.log(data)
         if (data.data.code === '200') {
           this.$message({
             message: data.data.data,
@@ -330,7 +325,6 @@ export default {
     },
     // 当点击调账触发的事件
     handleClickBill (val) {
-      console.log(val)
       this.invitorId = val.invitorId
       this.input2 = val.invitorName
       this.input3 = val.invitorTelephone
@@ -359,7 +353,6 @@ export default {
         comment: this.textarea1,
         extraType: this.radio
       }).then(data => {
-        // console.log(data)
         if (data.data.code === '200') {
           this.$message({
             message: data.data.data,
@@ -391,7 +384,6 @@ export default {
         rakeMoney: this.input5,
         comment: this.textarea
       }).then(data => {
-        // console.log(data)
         if (data.data.code === '200') {
           this.$message({
             message: data.data.data,
