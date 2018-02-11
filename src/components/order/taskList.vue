@@ -17,6 +17,10 @@
             </el-option>
           </el-select>
         </li>
+        <li>
+          用户名:
+          <el-input v-model="input2" placeholder="请输入用户名"></el-input>
+        </li>
       </ul>
       <ul class="ulTow">
         <li>
@@ -101,6 +105,7 @@ export default {
       currentPage: 1,
       input: '',
       input1: '',
+      input2: '',
       value1: '',
       textarea: '',
       value3: '',
@@ -134,7 +139,8 @@ export default {
         logisticsType: this.value,
         sellerTaskId: this.input1,
         status: this.value4,
-        substationId: this.userInfo.substationId
+        substationId: this.userInfo.substationId,
+        userName: this.input2
       }
     },
     ...mapGetters([
