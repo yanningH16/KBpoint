@@ -152,7 +152,6 @@ export default {
       input2: '',
       input3: '',
       currentPage: 1,
-      pageSize: 5,
       dialogVisible: false,
       toview: false,
       pointNum: 0,

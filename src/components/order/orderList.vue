@@ -152,7 +152,6 @@ export default {
     return {
       dialogVisible: false,
       currentPage: 1,
-      pageSize: 20,
       input: '',
       input1: '',
       input2: '',

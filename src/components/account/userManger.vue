@@ -219,7 +219,6 @@ export default {
       pullClick: false,
       currentPage: 1,
       sellerUserName: '',
-      pageSize: 20,
       input: '',
       input1: '',
       input2: '',

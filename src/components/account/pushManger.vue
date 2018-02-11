@@ -178,7 +178,6 @@ export default {
       dialogVisible_2: false,
       radio: '',
       currentPage: 1,
-      pageSize: 5,
       input: '',
       input1: '',
       input2: '',

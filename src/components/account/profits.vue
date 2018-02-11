@@ -69,7 +69,6 @@ export default {
     return {
       dialogVisible: false,
       currentPage: 1,
-      pageSize: 5,
       apiUrl: '/api/invitor/getWettingPagingListByInvitorId',
       input: '',
       input1: '',

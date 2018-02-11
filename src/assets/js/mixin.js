@@ -3,7 +3,7 @@ export const pageCommon = {
     return {
       pageSizeArray: [20, 30, 40, 50],
       pageNo: 1,
-      pageSize: 5,
+      pageSize: 20,
       pageTotal: null,
       total: null
     }
