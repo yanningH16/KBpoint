@@ -72,9 +72,9 @@
           </el-table-column>
           <el-table-column prop="invitedCode" label="邀请码" width="320" align="center">
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="250" align="center">
+          <el-table-column fixed="right" label="操作" width="200" align="center">
             <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">设置审核状态</el-button>
+              <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">设置审核状态</el-button> -->
               <el-button type="text" size="small" @click="handleClickCecal(scope.row)">设置等级/价格</el-button>
               <el-dropdown @command="userSet">
                 <span style="font-size:12px;color:#409EFF;">
