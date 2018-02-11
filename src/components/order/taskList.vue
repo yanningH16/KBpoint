@@ -133,7 +133,8 @@ export default {
         endTime: this.value3 ? this.value3[1] : null,
         logisticsType: this.value,
         sellerTaskId: this.input1,
-        status: this.value4
+        status: this.value4,
+        substationId: this.userInfo.substationId
       }
     },
     ...mapGetters([
