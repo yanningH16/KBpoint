@@ -1,6 +1,12 @@
 <template>
   <div class="userTitle">
     <div class="cont">
+      <p class="topData">
+        成本价
+        <span>{{consumeSum}}</span> 元,余额
+        <span>{{getMon}}</span> 元,预计可放单
+        <span>{{Math.floor(getMon/consumeSum)}}</span>单
+      </p>
       <div class="info" @click="showInfo=!showInfo">
         <img src="../../assets/images/bg.png" alt="">
         <span>{{this.userInfo.userName}}</span>
@@ -49,6 +55,8 @@ export default {
       showPass: false,
       showInfo: false,
       task: false,
+      getMon: '',
+      consumeSum: '',
       fixPassObj: {
         oldpass: '',
         newpass1: '',
@@ -60,6 +68,9 @@ export default {
     ...mapGetters([
       'userInfo'
     ])
+  },
+  created () {
+    this.getMoney()
   },
   methods: {
     logout () {
@@ -95,6 +106,23 @@ export default {
       }).catch(() => {
         this.$message.error('服务器错误！')
       })
+    },
+    getMoney () {
+      this.$ajax.post('/api/substation/getBalance', {
+        substationId: this.userInfo.substationId
+      }).then((data) => {
+        if (data.data.code === '200') {
+          this.getMon = data.data.data.balance
+          this.consumeSum = data.data.data.consumeSum
+        } else {
+          this.$message({
+            type: 'warning',
+            message: data.data.message
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }
@@ -119,6 +147,11 @@ export default {
       color #666
       span
         margin-right 12px
+    .topData
+      margin-top 23px
+      margin-right 10px
+      span
+        color #ff3341
     .info
       cursor pointer
       position relative

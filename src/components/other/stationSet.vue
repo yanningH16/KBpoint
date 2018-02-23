@@ -325,10 +325,11 @@ export default {
       margin-left 233px
       margin-top 40px
     .cover
-      width 700px
+      width 720px
       height 120px
       background white
       position absolute
       top 271px
       left 0
+      z-index 999
 </style>
