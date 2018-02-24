@@ -143,7 +143,7 @@
       </p>
       <p style="margin-top:20px">
         <span>抽成类型</span>&nbsp;&nbsp;&nbsp;
-        <el-select v-model="value2" placeholder="请选择">
+        <el-select v-model="value2" placeholder="请选择" @change="zero">
           <el-option v-for="item in type" :key="item.value2" :label="item.label" :value="item.value2">
           </el-option>
         </el-select>
@@ -245,6 +245,12 @@ export default {
     }
   },
   methods: {
+    zero () {
+      this.input5 = ''
+      if (this.value2 === '1') {
+        this.input5 = 0
+      }
+    },
     copy (val) {
       let copy = val.invitorCode
       this.$ajax.post('/api/invitor/getRegisterUrl', {

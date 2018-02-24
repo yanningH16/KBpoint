@@ -5,7 +5,7 @@
         成本价
         <span>{{consumeSum}}</span> 元,余额
         <span>{{getMon}}</span> 元,预计可放单
-        <span>{{Math.floor(getMon/consumeSum)}}</span>单
+        <span>{{Math.floor(getMon/consumeSum)||0}}</span>单
       </p>
       <div class="info" @click="showInfo=!showInfo">
         <img src="../../assets/images/bg.png" alt="">
