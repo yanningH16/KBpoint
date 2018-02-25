@@ -113,7 +113,7 @@ export default {
       }).then((data) => {
         if (data.data.code === '200') {
           this.getMon = data.data.data.balance
-          this.consumeSum = data.data.data.consumeSum
+          this.consumeSum = data.data.data.price
         } else {
           this.$message({
             type: 'warning',
