@@ -53,6 +53,8 @@
           </el-table-column>
           <el-table-column prop="comment" label="付款说明" width="120" align="center">
           </el-table-column>
+          <el-table-column prop="payingUserName" label="转账人姓名" width="120" align="center">
+          </el-table-column>
           <el-table-column prop="beforMoney" label="充值前金额" width="120" align="center">
           </el-table-column>
           <el-table-column prop="stautsDetail" label="状态" width="150" align="center">
