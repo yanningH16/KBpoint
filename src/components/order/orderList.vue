@@ -251,7 +251,7 @@ export default {
         if (data.data.code === '200') {
           this.$message({
             type: 'warning',
-            message: '获取中......'
+            message: '获取中,请稍等......'
           })
           var time = 3
           let time1 = setInterval(() => {
