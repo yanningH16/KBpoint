@@ -250,10 +250,21 @@ export default {
       }).then((data) => {
         if (data.data.code === '200') {
           this.$message({
-            type: 'success',
-            message: '重新获取成功'
+            type: 'warning',
+            message: '获取中......'
           })
-          this.getList()
+          var time = 3
+          let time1 = setInterval(() => {
+            time--
+            if (time === 0) {
+              this.$message({
+                type: 'success',
+                message: '重新获取成功'
+              })
+              this.getList()
+              clearInterval(time1)
+            }
+          }, 1000)
         } else {
           this.$message({
             type: 'warning',
