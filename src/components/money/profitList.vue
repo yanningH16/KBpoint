@@ -9,6 +9,9 @@
       <div class="table">
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="gmtCreate" label="日期" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.gmtCreate ? scope.row.gmtCreate.split(' ')[0] : '--' }}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="taskNum" label="任务数" align="center">
           </el-table-column>
