@@ -67,6 +67,8 @@
           </el-table-column>
           <el-table-column prop="userName" label="用户名" width="120" align="center">
           </el-table-column>
+          <el-table-column prop="channelName" label="渠道名称" width="120" align="center">
+          </el-table-column>
           <el-table-column prop="gmtCreate" label="发布日期" width="150" align="center">
           </el-table-column>
           <el-table-column prop="logisticsType" label="快递公司" width="120" align="center">

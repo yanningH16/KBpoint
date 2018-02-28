@@ -107,7 +107,7 @@
         </el-option>
       </el-select>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
         <el-button type="primary" @click="sure">确 定</el-button>
       </span>
     </el-dialog>
@@ -126,7 +126,7 @@
         <em style="font-size:12px;color:#ff3341;margin-left:58px">最低价格不能低于2.8元</em>
       </p>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible_1 = false">取 消</el-button>
+        <!-- <el-button @click="dialogVisible_1 = false">取 消</el-button> -->
         <el-button type="primary" @click="sure_1">确 定</el-button>
       </span>
     </el-dialog>
@@ -137,7 +137,7 @@
         <el-input v-model="input5" placeholder=""></el-input>
       </p>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible_2 = false">取 消</el-button>
+        <!-- <el-button @click="dialogVisible_2 = false">取 消</el-button> -->
         <el-button type="primary" @click="sure_2">确 定</el-button>
       </span>
     </el-dialog>
@@ -150,7 +150,7 @@
         </el-select>
       </p>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible_3 = false">取 消</el-button>
+        <!-- <el-button @click="dialogVisible_3 = false">取 消</el-button> -->
         <el-button type="primary" @click="sure_3">确 定</el-button>
       </span>
     </el-dialog>
@@ -165,8 +165,11 @@
         <el-input v-model="input7" placeholder=""></el-input>
       </p>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible_4 = false">取 消</el-button>
-        <el-button type="primary" @click="sure_4">确 定</el-button>
+        <!-- <el-button @click="dialogVisible_4 = false">取 消</el-button> -->
+        <el-button type="primary" @click="sure_4" v-show="isPoting">确 定</el-button>
+        <el-button type="info" disabled v-show="!isPoting">
+          <em class="el-icon-loading"></em>
+        </el-button>
       </span>
     </el-dialog>
     <!-- 点击充值密码触发的事件 -->
@@ -175,7 +178,7 @@
         你确定要重置{{sellerUserName}}用户密码么?请谨慎操作
       </p>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible_5 = false">取 消</el-button>
+        <!-- <el-button @click="dialogVisible_5 = false">取 消</el-button> -->
         <el-button type="primary" @click="sure_5">确 定</el-button>
       </span>
     </el-dialog>
@@ -194,8 +197,11 @@
         <el-input v-model="input10" placeholder=""></el-input>
       </p> -->
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible_6 = false">取 消</el-button>
-        <el-button type="primary" @click="sure_6">确 定</el-button>
+        <!-- <el-button @click="dialogVisible_6 = false">取 消</el-button> -->
+        <el-button type="primary" @click="sure_6" v-show="isPoting">确 定</el-button>
+        <el-button type="info" disabled v-show="!isPoting">
+          <em class="el-icon-loading"></em>
+        </el-button>
       </span>
     </el-dialog>
   </div>
@@ -310,7 +316,8 @@ export default {
         label: '代理商'
       }],
       tableData: [],
-      apiUrl: '/api/seller/getPagingSellerListByCondtion'
+      apiUrl: '/api/seller/getPagingSellerListByCondtion',
+      isPoting: true
     }
   },
   computed: {
@@ -507,6 +514,7 @@ export default {
         })
         return false
       }
+      this.isPoting = false
       this.$ajax.post('/api/seller/recharge/reduceMoneyFromSellerFund', {
         sellerAccountId: this.sellerAccountId,
         money: this.input6,
@@ -520,6 +528,7 @@ export default {
           })
           this.dialogVisible_4 = false
           this.getList()
+          this.isPoting = true
         } else {
           this.$message({
             type: 'warning',
@@ -532,6 +541,7 @@ export default {
     },
     // 给商家充值钱
     sure_6 () {
+      this.isPoting = false
       this.$ajax.post('/api/seller/recharge/addMoneyToSellerFund', {
         sellerAccountId: this.sellerAccountId,
         money: this.input8,
@@ -545,6 +555,7 @@ export default {
           })
           this.dialogVisible_6 = false
           this.getList()
+          this.isPoting = true
         } else {
           this.$message({
             type: 'warning',
