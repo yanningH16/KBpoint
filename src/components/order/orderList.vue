@@ -67,6 +67,8 @@
           </el-table-column>
           <el-table-column prop="userName" label="用户名" width="120" align="center">
           </el-table-column>
+          <el-table-column prop="sellerOrderId" label="任务号" width="120" align="center">
+          </el-table-column>
           <el-table-column prop="channelName" label="渠道名称" width="120" align="center">
           </el-table-column>
           <el-table-column prop="gmtCreate" label="发布日期" width="150" align="center">
@@ -85,14 +87,14 @@
               <span v-if="scope.row.shopType==='5'">其它</span>
             </template>
           </el-table-column>
-          <el-table-column prop="senderName" label="发货信息" width="380">
+          <el-table-column prop="senderName" label="发货信息" width="300">
             <template slot-scope="scope">
               <p>发货人姓名:{{scope.row.senderName}}</p>
               <p>发货人电话：{{scope.row.senderTelephone}}</p>
               <p>发货人地址：{{scope.row.senderProvince+scope.row.senderCity+((scope.row.senderRegion)||'')+scope.row.senderAddress}}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="receiveName" label="收货信息" width="380">
+          <el-table-column prop="receiveName" label="收货信息" width="300">
             <template slot-scope="scope">
               <p>收货人姓名:{{scope.row.receiveName}}</p>
               <p>收货人电话：{{scope.row.receiveTelephone}}</p>
@@ -116,8 +118,12 @@
               <p v-if="scope.row.status==='1'">快递单获取成功</p>
             </template>
           </el-table-column>
-          <el-table-column prop="sellerOrderId" label="任务号" width="120" align="center" fixed='right'>
-          </el-table-column>
+          <el-table-column fixed="right" label="操作" align="center" width="120">
+          <template slot-scope="scope">
+            <el-button v-if="scope.row.status==0" @click="handleClick(scope.row)" type="text" size="small">修改订单</el-button>
+            <el-button v-else type="text" size="small">--</el-button>
+          </template>
+        </el-table-column>
         </el-table>
       </div>
       <div class="pager">
@@ -142,6 +148,36 @@
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="修改订单" :append-to-body="true" :visible.sync="fixOrderObj.show" width="600px" top="15vh">
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人姓名</span>
+          <el-input v-model="fixOrderObj.receiveName" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人手机</span>
+          <el-input v-model="fixOrderObj.receiveTelephone" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人省</span>
+          <el-input v-model="fixOrderObj.receiveProvince" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人市</span>
+          <el-input v-model="fixOrderObj.receiveCity" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人区</span>
+          <el-input v-model="fixOrderObj.receiveRegion" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="cont" style="text-align:center;margin-bottom:20px;">
+          <span style="display:inline-block;width:100px;text-align:right;">收件人详细地址</span>
+          <el-input v-model="fixOrderObj.receiveAddress" style="width:300px;margin-left:10px;" placeholder="请输入内容"></el-input>
+        </div>
+        <div class="buttons" style="text-align:center;margin-top:40px;">
+          <span class="btn-b" style="margin-right:10px;" @click="fixOrderObj.show = false">取消</span>
+          <span class="btn" @click="sureToFix">确定</span>
+        </div>
+      </el-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -154,6 +190,17 @@ export default {
     return {
       dialogVisible: false,
       currentPage: 1,
+      // 修改订单
+      fixOrderObj: {
+        show: false,
+        sellerOrderId: '',
+        receiveName: '',
+        receiveTelephone: '',
+        receiveProvince: '',
+        receiveCity: '',
+        receiveRegion: '',
+        receiveAddress: ''
+      },
       input: '',
       input1: '',
       input2: '',
@@ -276,6 +323,40 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+    },
+    sureToFix () {
+      this.$ajax.post('/api/order/operate/fixTaskOrder', this.fixOrderObj).then((data) => {
+        if (data.data.code === '200') {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+          this.getList()
+          this.fixOrderObj.show = false
+        } else {
+          this.$message({
+            message: data.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch(() => {
+        this.$message.error('服务器错误！')
+      })
+    },
+    // 修改订单
+    handleClick (row) {
+      let obj = {
+        show: this.fixOrderObj.show || '',
+        sellerOrderId: row.sellerOrderId || '',
+        receiveName: row.receiveName || '',
+        receiveTelephone: row.receiveTelephone || '',
+        receiveProvince: row.receiveProvince || '',
+        receiveCity: row.receiveCity || '',
+        receiveRegion: row.receiveRegion || '',
+        receiveAddress: row.receiveAddress || ''
+      }
+      this.fixOrderObj = obj
+      this.fixOrderObj.show = true
     },
     initTime () {
       let time = new Date().getTime()
