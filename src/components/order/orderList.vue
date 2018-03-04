@@ -71,12 +71,12 @@
           </el-table-column>
           <el-table-column prop="gmtCreate" label="发布日期" width="150" align="center">
           </el-table-column>
-          <el-table-column prop="logisticsType" label="快递公司" width="120" align="center">
+          <el-table-column prop="logisticsType" label="快递公司" width="100" align="center">
             <template slot-scope="scope">
               <p v-if="scope.row.logisticsType==='1'">圆通</p>
             </template>
           </el-table-column>
-          <el-table-column prop="shopType" label="平台" width="120" align="center">
+          <el-table-column prop="shopType" label="平台" width="100" align="center">
             <template slot-scope="scope">
               <span v-if="scope.row.shopType==='1'">淘宝</span>
               <span v-if="scope.row.shopType==='2'">天猫</span>
@@ -276,7 +276,26 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+    },
+    initTime () {
+      let time = new Date().getTime()
+      let timeStart = time - (3 * 24 * 60 * 60 * 1000)
+      let timeEnd = time
+      let time1 = new Date(timeStart)
+      let y1 = time1.getFullYear()
+      let m1 = time1.getMonth() < 9 ? '0' + (time1.getMonth() + 1) : (time1.getMonth() + 1)
+      let d1 = time1.getDate() <= 9 ? '0' + (time1.getDate()) : (time1.getDate())
+      let time2 = new Date(timeEnd)
+      let y2 = time2.getFullYear()
+      let m2 = time2.getMonth() < 9 ? '0' + (time2.getMonth() + 1) : (time2.getMonth() + 1)
+      let d2 = time2.getDate() <= 9 ? '0' + (time2.getDate()) : (time2.getDate())
+      let times1 = y1 + '-' + m1 + '-' + d1
+      let times2 = y2 + '-' + m2 + '-' + d2
+      this.value3 = [times1, times2]
     }
+  },
+  created () {
+    this.initTime()
   }
 }
 </script>
