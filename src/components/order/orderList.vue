@@ -207,8 +207,8 @@ export default {
       return {
         currPageNo: this.pageNo,
         limit: this.pageSize,
-        startTime: this.value3 ? this.value3[0] : null,
-        endTime: this.value3 ? this.value3[1] : null,
+        createStartTime: this.value3 ? this.value3[0] : null,
+        createEndTime: this.value3 ? this.value3[1] : null,
         logisticsType: this.value,
         payStatus: this.value4,
         orderStatus: this.value5,
