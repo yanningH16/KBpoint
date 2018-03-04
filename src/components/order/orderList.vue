@@ -51,7 +51,7 @@
         </li>
         <li>
           提交日期:
-          <el-date-picker v-model="value3" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format='yyyy-MM-dd' format='yyyy-MM-dd'>
+          <el-date-picker v-model="value3" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format='yyyy-MM-dd HH:mm:ss' :default-time="['00:00:00', '23:59:59']" format='yyyy-MM-dd'>
           </el-date-picker>
         </li>
         <li>
@@ -289,8 +289,8 @@ export default {
       let y2 = time2.getFullYear()
       let m2 = time2.getMonth() < 9 ? '0' + (time2.getMonth() + 1) : (time2.getMonth() + 1)
       let d2 = time2.getDate() <= 9 ? '0' + (time2.getDate()) : (time2.getDate())
-      let times1 = y1 + '-' + m1 + '-' + d1
-      let times2 = y2 + '-' + m2 + '-' + d2
+      let times1 = y1 + '-' + m1 + '-' + d1 + ' 00:00:00'
+      let times2 = y2 + '-' + m2 + '-' + d2 + ' 23:59:59'
       this.value3 = [times1, times2]
     }
   },
