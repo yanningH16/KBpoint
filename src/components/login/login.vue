@@ -76,6 +76,8 @@ export default {
                 this.$router.push({ name: 'userManger' })
               }
             })
+            localStorage.setItem('__userNameAccount__', this.username)
+            localStorage.setItem('__abcps__', this.password)
           } else {
             this.$message({
               message: data.data.message,
@@ -91,6 +93,14 @@ export default {
       'setUserInfo',
       'setUserToken'
     ])
+  },
+  mounted () {
+    if (localStorage.getItem('__userNameAccount__')) {
+      this.username = localStorage.getItem('__userNameAccount__')
+    }
+    if (localStorage.getItem('__abcps__')) {
+      this.password = localStorage.getItem('__abcps__')
+    }
   }
 }
 </script>

@@ -158,11 +158,11 @@
     <el-dialog title="扣除金额" :visible.sync="dialogVisible_4" width="30%" :before-close="handleClose">
       <p>
         <span>金额(元)</span>
-        <el-input v-model="input6" placeholder=""></el-input>
+        <el-input v-model="input6" placeholder="请输入金额"></el-input>
       </p>
       <p style="margin-top:20px;margin-left:23px">
         <span>备注</span>
-        <el-input v-model="input7" placeholder=""></el-input>
+        <el-input v-model="input7" placeholder="请输入备注(必填)"></el-input>
       </p>
       <span slot="footer" class="dialog-footer">
         <!-- <el-button @click="dialogVisible_4 = false">取 消</el-button> -->
@@ -186,11 +186,11 @@
     <el-dialog title="用户充值" :visible.sync="dialogVisible_6" width="30%" :before-close="handleClose">
       <p>
         <span>金额(元)</span>&nbsp;
-        <el-input v-model="input8" placeholder=""></el-input>
+        <el-input v-model="input8" placeholder="请输入金额"></el-input>
       </p>
       <p style="margin-top:20px;margin-left:25px">
         <span>备注</span>&nbsp;
-        <el-input v-model="input9" placeholder=""></el-input>
+        <el-input v-model="input9" placeholder="请输入备注(必填)"></el-input>
       </p>
       <!-- <p style="margin-top:20px">
         <span>收款卡号</span>&nbsp;
@@ -541,6 +541,13 @@ export default {
     },
     // 给商家充值钱
     sure_6 () {
+      if (this.input8 === '' || this.input9 === '') {
+        this.$message({
+          type: 'warning',
+          message: '请正确填写内容!!!'
+        })
+        return false
+      }
       this.isPoting = false
       this.$ajax.post('/api/seller/recharge/addMoneyToSellerFund', {
         sellerAccountId: this.sellerAccountId,
