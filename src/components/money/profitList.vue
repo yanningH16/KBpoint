@@ -3,7 +3,7 @@
     <div class="wrap">
       <h3>利润报表</h3>
       <span>日期查询</span>
-      <el-date-picker v-model="value3" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format='yyyy-MM-dd' format='yyyy-MM-dd'>
+      <el-date-picker v-model="value3" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format='yyyy-MM-dd HH:mm:ss' :default-time="['00:00:00', '23:59:59']" format='yyyy-MM-dd'>
       </el-date-picker>
       <button class="BtnDisable" @click="search">查询</button>
       <div class="table">
