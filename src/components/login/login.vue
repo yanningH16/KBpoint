@@ -76,8 +76,8 @@ export default {
                 this.$router.push({ name: 'userManger' })
               }
             })
-            localStorage.setItem('__userNameAccount__', this.username)
-            localStorage.setItem('__abcps__', this.password)
+            sessionStorage.setItem('__userNameAccount__', this.username)
+            sessionStorage.setItem('__abcps__', this.password)
           } else {
             this.$message({
               message: data.data.message,
@@ -95,11 +95,11 @@ export default {
     ])
   },
   mounted () {
-    if (localStorage.getItem('__userNameAccount__')) {
-      this.username = localStorage.getItem('__userNameAccount__')
+    if (sessionStorage.getItem('__userNameAccount__')) {
+      this.username = sessionStorage.getItem('__userNameAccount__')
     }
-    if (localStorage.getItem('__abcps__')) {
-      this.password = localStorage.getItem('__abcps__')
+    if (sessionStorage.getItem('__abcps__')) {
+      this.password = sessionStorage.getItem('__abcps__')
     }
   }
 }
