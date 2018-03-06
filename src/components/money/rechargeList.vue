@@ -44,27 +44,47 @@
           <el-table-column prop="gmtCreate" label="提交日期" width="230" align="center">
           </el-table-column>
           <el-table-column prop="passTime" label="到账日期" width="230" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.passTime||'--'}}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="rechargeId" label="交易号" width="250" align="center">
           </el-table-column>
           <el-table-column prop="money" label="充值金额" width="120" align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.instruction==='减钱'">-{{ scope.row.money }}</span>
+              <span v-else>{{ scope.row.money }}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="payTypeDetail" label="付款方式" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.payTypeDetail||scope.row.instruction}}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="comment" label="付款说明" width="120" align="center">
           </el-table-column>
           <el-table-column prop="payingUserName" label="转账人姓名" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.payingUserName||'--'}}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="beforMoney" label="充值前金额" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.beforMoney||'--'}}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="stautsDetail" label="状态" width="150" align="center">
           </el-table-column>
           <el-table-column prop="afterMoney" label="充值后金额" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.afterMoney||'--'}}</span>
+            </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template slot-scope="scope">
               <el-button @click="handleClick(scope.row)" type="text" size="small" v-if="scope.row.stautsDetail==='等待付款'||scope.row.stautsDetail==='等待收款'||scope.row.stautsDetail==='等待收货'">款已到账</el-button>
               <el-button type="text" size="small" @click="handleClickCecal(scope.row)" v-if="scope.row.stautsDetail==='等待付款'||scope.row.stautsDetail==='等待收款'||scope.row.stautsDetail==='等待收货'">驳回订单</el-button>
+              <span v-if=" scope.row.status==6">--</span>
             </template>
           </el-table-column>
         </el-table>
